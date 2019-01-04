@@ -1,0 +1,43 @@
+#pragma once
+
+// スプライトID
+enum class SPRITE_ID
+{
+	NONE,
+	TEST_SPRITE,
+};
+
+// モデルID
+enum class MODEL_ID
+{
+	NONE,
+	SIRO_MODEL,			// シロモデル
+	MIRAI_AKARI_MODEL,	// アカリモデル
+	KOUHAI_CHAN_MODEL,	// 後輩ちゃんモデル
+	ICHIGO_MODEL,		// 宇志海いちごモデル
+	STAGE_MODEL,		// ステージ
+};
+
+// 頂点シェーダID
+enum class VERTEX_SHADER_ID
+{
+	NONE,
+	MESH_SHADER,
+	SHADOW_SHADER,
+	TEXTURE_SHADER,
+	FONT_SHADER,
+};
+
+// ピクセルシェーダID
+enum class PIXEL_SHADER_ID
+{
+	NONE,
+	MESH_SHADER,
+	TEXTURE_SHADER,
+	GRAYSCALE_SHADER,
+	BRIGHTPASS_SHADER,
+	GAUSSIANBLUR_H_SHADER,
+	GAUSSIANBLUR_V_SHADER,
+	BLOOM_SHADER,
+	UNCHARTED2_TOONMAP_SHADER,
+};
