@@ -1,0 +1,13 @@
+*.exe
+*.cache
+*.dll
+*.log
+*.pdb
+Debug/
+DirectXTex/
+x64/
+DirectX_Practice/Debug/
+DirectX_Practice/Release/
+DirectX_Practice/src/
+DirectX_Practice/x64/
+DirectX_Practice/**.ttf
