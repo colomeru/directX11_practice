@@ -146,3 +146,12 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
+DirectX_Practice/.vs/
+*.ttf
+DirectX_Practice/DirectX_Practice/res/
+DirectX_Practice/DirectXTex/
+DirectX_Practice/DirectX_Practice/src/WICTextureLoader/WICTextureLoader12.h
+DirectX_Practice/DirectX_Practice/src/WICTextureLoader/WICTextureLoader12.cpp
+DirectX_Practice/DirectX_Practice/src/WICTextureLoader/WICTextureLoader.h
+DirectX_Practice/DirectX_Practice/src/WICTextureLoader/WICTextureLoader.cpp
+DirectX_Practice/DirectX_Practice/src/Graphic/Reader/
