@@ -2,7 +2,7 @@
 #include "../../DirectX/DirectX11.h"
 
 MeshVertexShader::MeshVertexShader() :
-	VertexShader("MeshVertexShader")
+	VertexShader("MeshVertexShader.hlsl")
 {
 	// シェーダーの生成
 	CreateShader();
