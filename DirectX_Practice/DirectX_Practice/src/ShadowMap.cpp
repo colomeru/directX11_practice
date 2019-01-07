@@ -6,6 +6,7 @@
 #include <float.h>
 
 #include "Input/Keyboard.h"
+#include "util/MyUtil.h"
 #include "util/math/MathHelper.h"
 #include "util/math/Vector2.h"
 #include "Graphic/Font/DrawFont.h"
@@ -202,7 +203,7 @@ void ShadowMap::Update()
 
 void ShadowMap::Draw()
 {
-	DrawFont::GetInstance()->Draw(Vector2(10.0f, 320.0f), DrawFont::GetInstance()->format("m_Bias : K/M : %.7f", m_Bias));
-	DrawFont::GetInstance()->Draw(Vector2(10.0f, 340.0f), DrawFont::GetInstance()->format("m_SlopeScaledBias : J/N : %.2f", m_SlopeScaledBias));
-	DrawFont::GetInstance()->Draw(Vector2(10.0f, 360.0f), DrawFont::GetInstance()->format("m_DepthBiasClamp : H/B : %.2f", m_DepthBiasClamp));
+	DrawFont::GetInstance()->Draw(Vector2(10.0f, 320.0f), MyUtil::toString("m_Bias : K/M : %.7f", m_Bias));
+	DrawFont::GetInstance()->Draw(Vector2(10.0f, 340.0f), MyUtil::toString("m_SlopeScaledBias : J/N : %.2f", m_SlopeScaledBias));
+	DrawFont::GetInstance()->Draw(Vector2(10.0f, 360.0f), MyUtil::toString("m_DepthBiasClamp : H/B : %.2f", m_DepthBiasClamp));
 }
