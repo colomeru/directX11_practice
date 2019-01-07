@@ -19,6 +19,10 @@ public:
 	// アルファブレンドの設定
 	void SetAlphaBlend(bool alphaEnable, bool alphaToCoverageEnable);
 
+	// コピー禁止
+	Model(const Model&) = delete;
+	Model& operator = (const Model&) = delete;
+
 public:
 	Mesh		mesh;		// メッシュ
 	Skeleton	skeleton;	// スケルトン

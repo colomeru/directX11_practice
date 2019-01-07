@@ -1,6 +1,5 @@
 #include "SphereModel.h"
 #include "Vertex.h"
-#include "Utility.h"
 #include "DirectX/DirectX11.h"
 #include "ConstantBuffer/ConstantBuffer.h"
 #include "Camera/Camera.h"
@@ -26,11 +25,8 @@ SphereModel::SphereModel(float x) :
 
 SphereModel::~SphereModel()
 {
-	Clear();
-
-	SAFE_RELEASE(m_pConstantBuffer);
-	SAFE_RELEASE(m_pIndexBuffer);
-	SAFE_RELEASE(m_pVertexBuffer);
+	delete[] m_pVertices;
+	delete[] m_pIndexBuffer;
 }
 
 void SphereModel::Draw()
@@ -138,12 +134,4 @@ int SphereModel::GetVertexNum() const
 int SphereModel::GetIndexNum() const
 {
 	return m_IndexNum;
-}
-
-bool SphereModel::Clear()
-{
-	SAFE_DELETE(m_pVertices);
-	SAFE_DELETE(m_pIndexes);
-
-	return true;
 }

@@ -1,6 +1,5 @@
 #include "Texture.h"
 #include "DirectX11.h"
-#include "../Utility.h"
 #include <tchar.h>
 
 Texture::Texture() :

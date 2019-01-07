@@ -2,7 +2,6 @@
 #include "RenderTarget.h"
 #include "DepthStencil.h"
 #include "../Window.h"
-#include "../Utility.h"
 
 DirectX11::DirectX11() :
 	m_DriverType(D3D_DRIVER_TYPE_NULL),
