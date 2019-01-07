@@ -189,6 +189,12 @@
     <ClInclude Include="src\Shader\vertex\ShadowMeshVertexShader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="src\Shader\vertex\MeshVertexShader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shader\pixel\MeshPixelShader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\DefaultPixelShader.hlsl" />
@@ -205,6 +211,8 @@
     <FxCompile Include="shader\vertex\FontVertexShader.hlsl" />
     <FxCompile Include="shader\vertex\ShadowVertexShader.hlsl" />
     <FxCompile Include="shader\pixel\ShadowPixelShader.hlsl" />
+    <FxCompile Include="shader\vertex\MeshVertexShader.hlsl" />
+    <FxCompile Include="shader\pixel\MeshPixelShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GameBase.cpp">
@@ -343,6 +351,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader\vertex\ShadowMeshVertexShader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\vertex\MeshVertexShader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\pixel\MeshPixelShader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

@@ -183,6 +183,7 @@
     <ClInclude Include="src\Input\Keyboard.h" />
     <ClInclude Include="src\Shader\Effect.h" />
     <ClInclude Include="src\Shader\MeshShader.h" />
+    <ClInclude Include="src\Shader\pixel\MeshPixelShader.h" />
     <ClInclude Include="src\Shader\pixel\PixelShader.h" />
     <ClInclude Include="src\DirectX\RenderTarget.h" />
     <ClInclude Include="src\DirectX\Texture.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="src\Shader\ShaderManager.h" />
     <ClInclude Include="src\Shader\ShadowMapShader.h" />
     <ClInclude Include="src\Shader\vertex\FontVertexShader.h" />
+    <ClInclude Include="src\Shader\vertex\MeshVertexShader.h" />
     <ClInclude Include="src\Shader\vertex\VertexShader.h" />
     <ClInclude Include="src\GameBase.h" />
     <ClInclude Include="src\Graphic\RenderTexture.h" />
@@ -312,6 +314,16 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">main</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="shader\pixel\MeshPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="shader\pixel\ShadowPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -327,6 +339,16 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="shader\vertex\FontVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="shader\vertex\MeshVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
@@ -421,6 +443,7 @@
     <ClCompile Include="src\Input\Keyboard.cpp" />
     <ClCompile Include="src\Shader\Effect.cpp" />
     <ClCompile Include="src\Shader\MeshShader.cpp" />
+    <ClCompile Include="src\Shader\pixel\MeshPixelShader.cpp" />
     <ClCompile Include="src\Shader\pixel\ShadowMeshPixelShader.cpp" />
     <ClCompile Include="src\Shader\pixel\PixelShader.cpp" />
     <ClCompile Include="src\DirectX\RenderTarget.cpp" />
@@ -430,6 +453,7 @@
     <ClCompile Include="src\Shader\ShaderManager.cpp" />
     <ClCompile Include="src\Shader\ShadowMapShader.cpp" />
     <ClCompile Include="src\Shader\vertex\FontVertexShader.cpp" />
+    <ClCompile Include="src\Shader\vertex\MeshVertexShader.cpp" />
     <ClCompile Include="src\Shader\vertex\VertexShader.cpp" />
     <ClCompile Include="src\GameBase.cpp" />
     <ClCompile Include="src\Graphic\RenderTexture.cpp" />
