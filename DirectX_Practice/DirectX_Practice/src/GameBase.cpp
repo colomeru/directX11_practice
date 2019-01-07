@@ -32,12 +32,12 @@
 #include "util/math/Vector2.h"
 
 // 頂点シェーダー
-#include "Shader/vertex/MeshVertexShader.h"
+#include "Shader/vertex/ShadowMeshVertexShader.h"
 #include "Shader/vertex/ShadowMapVertexShader.h"
 #include "Shader/vertex/TextureVertexShader.h"
 #include "Shader/vertex/FontVertexShader.h"
 // ピクセルシェーダ
-#include "Shader/pixel/MeshPixelShader.h"
+#include "Shader/pixel/ShadowMeshPixelShader.h"
 #include "Shader/pixel/TexturePixelShader.h"
 #include "Shader/pixel/PostEffectPixelShader.h"
 
@@ -255,7 +255,7 @@ bool GameBase::Run(HINSTANCE hIns)
 	static float color[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
 	// シェーダー生成
-	Effect effectDefault(VERTEX_SHADER_ID::MESH_SHADER, PIXEL_SHADER_ID::MESH_SHADER);
+	Effect effectDefault(VERTEX_SHADER_ID::SHADOW_MESH_SHADER, PIXEL_SHADER_ID::SHADOW_MESH_SHADER);
 	Effect effectShadowMap(VERTEX_SHADER_ID::SHADOW_SHADER);
 	Effect effectGrayScale(VERTEX_SHADER_ID::TEXTURE_SHADER, PIXEL_SHADER_ID::GRAYSCALE_SHADER);
 	Effect effectBright(VERTEX_SHADER_ID::TEXTURE_SHADER, PIXEL_SHADER_ID::BRIGHTPASS_SHADER);
@@ -618,13 +618,13 @@ void GameBase::LoadResources()
 
 	/* シェーダーの読み込み */
 	// 頂点シェーダの読み込み
-	ShaderManager::GetInstance()->Add(VERTEX_SHADER_ID::MESH_SHADER, std::make_shared<MeshVertexShader>());
+	ShaderManager::GetInstance()->Add(VERTEX_SHADER_ID::SHADOW_MESH_SHADER, std::make_shared<ShadowMeshVertexShader>());
 	ShaderManager::GetInstance()->Add(VERTEX_SHADER_ID::SHADOW_SHADER, std::make_shared<ShadowMapVertexShader>());
 	ShaderManager::GetInstance()->Add(VERTEX_SHADER_ID::TEXTURE_SHADER, std::make_shared<TextureVertexShader>());
 	ShaderManager::GetInstance()->Add(VERTEX_SHADER_ID::FONT_SHADER, std::make_shared<FontVertexShader>());
 
 	// ピクセルシェーダの読み込み
-	ShaderManager::GetInstance()->Add(PIXEL_SHADER_ID::MESH_SHADER, std::make_shared<MeshPixelShader>());
+	ShaderManager::GetInstance()->Add(PIXEL_SHADER_ID::SHADOW_MESH_SHADER, std::make_shared<ShadowMeshPixelShader>());
 	ShaderManager::GetInstance()->Add(PIXEL_SHADER_ID::TEXTURE_SHADER, std::make_shared<TexturePixelShader>());
 	ShaderManager::GetInstance()->Add(PIXEL_SHADER_ID::GRAYSCALE_SHADER, std::make_shared<PostEffectPixelShader>("GrayScale.hlsl"));
 	ShaderManager::GetInstance()->Add(PIXEL_SHADER_ID::BRIGHTPASS_SHADER, std::make_shared<PostEffectPixelShader>("BrightPass.hlsl"));

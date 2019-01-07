@@ -10,7 +10,6 @@ struct VS_OUTPUT
 	float4 Position		: SV_POSITION;
 	float4 PositionW	: POSITION0;
 	float4 NormalW		: NORMAL0;
-	float4 Color		: COLOR0;
 	float2 Texcoord		: TEXCOORD0;
 	float4 SdwCoord		: SHADOW_COORD0;
 };
@@ -40,10 +39,9 @@ VS_OUTPUT main(VS_INPUT input)
 	float4 proj  = mul(view, Projection);
 	output.Position = proj;
 
-	output.PositionW = mul(float4(input.Position, 1.0f), World);
+	output.PositionW = world;
 	output.NormalW	 = mul(float4(input.Normal, 1.0f), World);
 
-	//output.Color	= input.Color;
 	output.Texcoord = input.Texcoord;
 
 	output.SdwCoord = mul(world, Shadow);

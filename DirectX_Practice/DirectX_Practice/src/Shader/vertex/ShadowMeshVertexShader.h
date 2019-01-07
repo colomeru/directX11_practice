@@ -1,11 +1,11 @@
 #pragma once
 #include "VertexShader.h"
 
-class MeshVertexShader : public VertexShader
+class ShadowMeshVertexShader : public VertexShader
 {
 public:
 	// コンストラクタ
-	MeshVertexShader();
+	ShadowMeshVertexShader();
 
 protected:
 	// インプットレイアウトの生成

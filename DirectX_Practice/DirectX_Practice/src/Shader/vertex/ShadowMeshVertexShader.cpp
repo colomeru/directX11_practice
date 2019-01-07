@@ -1,8 +1,8 @@
-#include "MeshVertexShader.h"
+#include "ShadowMeshVertexShader.h"
 #include "../../DirectX/DirectX11.h"
 
-MeshVertexShader::MeshVertexShader() :
-	VertexShader("VertexShader.hlsl")
+ShadowMeshVertexShader::ShadowMeshVertexShader() :
+	VertexShader("ShadowVertexShader.hlsl")
 {
 	// シェーダーの生成
 	CreateShader();
@@ -10,7 +10,7 @@ MeshVertexShader::MeshVertexShader() :
 	CreateInputLayout();
 }
 
-HRESULT MeshVertexShader::CreateInputLayout()
+HRESULT ShadowMeshVertexShader::CreateInputLayout()
 {
 	D3D11_INPUT_ELEMENT_DESC ieDesc[]
 	{

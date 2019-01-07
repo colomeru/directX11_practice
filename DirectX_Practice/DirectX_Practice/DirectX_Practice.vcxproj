@@ -186,7 +186,7 @@
     <ClInclude Include="src\Shader\pixel\PixelShader.h" />
     <ClInclude Include="src\DirectX\RenderTarget.h" />
     <ClInclude Include="src\DirectX\Texture.h" />
-    <ClInclude Include="src\Shader\pixel\MeshPixelShader.h" />
+    <ClInclude Include="src\Shader\pixel\ShadowMeshPixelShader.h" />
     <ClInclude Include="src\Shader\pixel\PostEffectPixelShader.h" />
     <ClInclude Include="src\Shader\pixel\TexturePixelShader.h" />
     <ClInclude Include="src\Shader\ShaderManager.h" />
@@ -202,7 +202,7 @@
     <ClInclude Include="src\Graphic\Reader\string_convertor.h" />
     <ClInclude Include="src\Graphic\Reader\VMDFileReader.h" />
     <ClInclude Include="src\Light\Light.h" />
-    <ClInclude Include="src\Shader\vertex\MeshVertexShader.h" />
+    <ClInclude Include="src\Shader\vertex\ShadowMeshVertexShader.h" />
     <ClInclude Include="src\Shader\vertex\ShadowMapVertexShader.h" />
     <ClInclude Include="src\Shader\vertex\TextureVertexShader.h" />
     <ClInclude Include="src\ShadowMap.h" />
@@ -312,7 +312,7 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">main</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="shader\pixel\PixelShader.hlsl">
+    <FxCompile Include="shader\pixel\ShadowPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -388,7 +388,7 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">main</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="shader\vertex\VertexShader.hlsl">
+    <FxCompile Include="shader\vertex\ShadowVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
@@ -421,7 +421,7 @@
     <ClCompile Include="src\Input\Keyboard.cpp" />
     <ClCompile Include="src\Shader\Effect.cpp" />
     <ClCompile Include="src\Shader\MeshShader.cpp" />
-    <ClCompile Include="src\Shader\pixel\MeshPixelShader.cpp" />
+    <ClCompile Include="src\Shader\pixel\ShadowMeshPixelShader.cpp" />
     <ClCompile Include="src\Shader\pixel\PixelShader.cpp" />
     <ClCompile Include="src\DirectX\RenderTarget.cpp" />
     <ClCompile Include="src\DirectX\Texture.cpp" />
@@ -436,7 +436,7 @@
     <ClCompile Include="src\Graphic\Reader\string_convertor.cpp" />
     <ClCompile Include="src\Light\Light.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Shader\vertex\MeshVertexShader.cpp" />
+    <ClCompile Include="src\Shader\vertex\ShadowMeshVertexShader.cpp" />
     <ClCompile Include="src\Shader\vertex\ShadowMapVertexShader.cpp" />
     <ClCompile Include="src\Shader\vertex\TextureVertexShader.cpp" />
     <ClCompile Include="src\ShadowMap.cpp" />

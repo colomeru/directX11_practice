@@ -3,7 +3,6 @@ struct PS_INPUT
 	float4 Position		: SV_POSITION;
 	float4 PositionW	: POSITION0;
 	float4 NormalW		: NORMAL0;
-	float4 Color		: COLOR0;
 	float2 Texcoord		: TEXCOORD0;
 	float4 SdwCoord		: SHADOW_COORD0;
 };

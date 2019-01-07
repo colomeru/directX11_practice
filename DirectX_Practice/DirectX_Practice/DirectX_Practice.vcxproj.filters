@@ -153,9 +153,6 @@
     <ClInclude Include="src\Shader\ShadowMapShader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\Shader\vertex\MeshVertexShader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="src\Shader\vertex\ShadowMapVertexShader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -166,9 +163,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphic\Model\mesh\ShadowMapMesh.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Shader\pixel\MeshPixelShader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\Shader\pixel\PixelShader.h">
@@ -189,6 +183,12 @@
     <ClInclude Include="src\WICTextureLoader\WICTextureLoader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="src\Shader\pixel\ShadowMeshPixelShader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shader\vertex\ShadowMeshVertexShader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\DefaultPixelShader.hlsl" />
@@ -198,13 +198,13 @@
     <FxCompile Include="shader\pixel\GaussianBlurH.hlsl" />
     <FxCompile Include="shader\pixel\GaussianBlurV.hlsl" />
     <FxCompile Include="shader\pixel\GrayScale.hlsl" />
-    <FxCompile Include="shader\pixel\PixelShader.hlsl" />
     <FxCompile Include="shader\pixel\TexturePixelShader.hlsl" />
     <FxCompile Include="shader\vertex\ShadowMapShader.hlsl" />
     <FxCompile Include="shader\vertex\TextureVertexShader.hlsl" />
-    <FxCompile Include="shader\vertex\VertexShader.hlsl" />
     <FxCompile Include="shader\pixel\Uncharted2Tonemap.hlsl" />
     <FxCompile Include="shader\vertex\FontVertexShader.hlsl" />
+    <FxCompile Include="shader\vertex\ShadowVertexShader.hlsl" />
+    <FxCompile Include="shader\pixel\ShadowPixelShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GameBase.cpp">
@@ -312,9 +312,6 @@
     <ClCompile Include="src\Shader\ShadowMapShader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shader\vertex\MeshVertexShader.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\Shader\vertex\ShadowMapVertexShader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -330,9 +327,6 @@
     <ClCompile Include="src\Shader\pixel\PixelShader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shader\pixel\MeshPixelShader.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\Shader\pixel\TexturePixelShader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -343,6 +337,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\WICTextureLoader\WICTextureLoader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\pixel\ShadowMeshPixelShader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\vertex\ShadowMeshVertexShader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
