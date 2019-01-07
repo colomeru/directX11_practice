@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include "FontManager.h"
 #include "../../Shader/Effect.h"
+#include <iostream>
 
 struct Vector2;
 
@@ -20,9 +21,6 @@ public:
 	void Load(const std::string& fileName, int fontSize);
 	// 描画
 	void Draw(Vector2 position, const std::string& text);
-
-	// 可変長引数をstringにして返す
-	std::string format(const char* format, ...);
 
 private:
 	// コンストラクタ

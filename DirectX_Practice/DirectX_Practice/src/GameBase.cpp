@@ -30,6 +30,7 @@
 
 #include "util/math/MathHelper.h"
 #include "util/math/Vector2.h"
+#include "util/MyUtil.h"
 
 // 頂点シェーダー
 #include "Shader/vertex/MeshVertexShader.h"
@@ -571,29 +572,28 @@ bool GameBase::Run(HINSTANCE hIns)
 		}
 
 		// FPS描画
-		DrawFont::GetInstance()->Draw(Vector2(10.0f, 10.0f), DrawFont::GetInstance()->format("FPS : %.1f", sleep.fps));
+		DrawFont::GetInstance()->Draw(Vector2(10.0f, 10.0f), MyUtil::toString("FPS : %.1f", sleep.fps));
 
 		// パラメータ描画
 		if (debugDraw)
 		{
-			DrawFont::GetInstance()->Draw(Vector2(10.0f,  30.0f), DrawFont::GetInstance()->format("ライト回転     : A/D"));
-			DrawFont::GetInstance()->Draw(Vector2(10.0f,  50.0f), DrawFont::GetInstance()->format("モデル回転     : Z/X"));
-			DrawFont::GetInstance()->Draw(Vector2(10.0f,  70.0f), DrawFont::GetInstance()->format("モデル切り替え   : C"));
-			DrawFont::GetInstance()->Draw(Vector2(10.0f,  90.0f), DrawFont::GetInstance()->format("カメラ移動     : 十字キー"));
-			DrawFont::GetInstance()->Draw(Vector2(10.0f, 110.0f), DrawFont::GetInstance()->format("シェーダー切り替え : 1/2/3/4"));
-			DrawFont::GetInstance()->Draw(Vector2(10.0f, 130.0f), DrawFont::GetInstance()->format("影解像度切り替え 　: Q/E"));
-			DrawFont::GetInstance()->Draw(Vector2(10.0f, 200.0f), DrawFont::GetInstance()->format("輝度の閾値   : Y/G : %.2f", brightPassThreshold));
-			DrawFont::GetInstance()->Draw(Vector2(10.0f, 220.0f), DrawFont::GetInstance()->format("元画像の彩度  : P/L : %.2f", baseSaturation));
-			DrawFont::GetInstance()->Draw(Vector2(10.0f, 240.0f), DrawFont::GetInstance()->format("元画像の輝度  : O/K : %.2f", baseIntensity));
-			DrawFont::GetInstance()->Draw(Vector2(10.0f, 260.0f), DrawFont::GetInstance()->format("ブルームの彩度 : I/J : %.2f", bloomSaturation));
-			DrawFont::GetInstance()->Draw(Vector2(10.0f, 280.0f), DrawFont::GetInstance()->format("ブルームの輝度 : U/H : %.2f", bloomIntensity));
-			DrawFont::GetInstance()->Draw(Vector2(10.0f, 300.0f), DrawFont::GetInstance()->format("パラメータの初期化 : R"));
+			DrawFont::GetInstance()->Draw(Vector2(10.0f,  30.0f), MyUtil::toString("ライト回転     : A/D"));
+			DrawFont::GetInstance()->Draw(Vector2(10.0f,  50.0f), MyUtil::toString("モデル回転     : Z/X"));
+			DrawFont::GetInstance()->Draw(Vector2(10.0f,  70.0f), MyUtil::toString("モデル切り替え   : C"));
+			DrawFont::GetInstance()->Draw(Vector2(10.0f,  90.0f), MyUtil::toString("カメラ移動     : 十字キー"));
+			DrawFont::GetInstance()->Draw(Vector2(10.0f, 110.0f), MyUtil::toString("シェーダー切り替え : 1/2/3/4"));
+			DrawFont::GetInstance()->Draw(Vector2(10.0f, 130.0f), MyUtil::toString("影解像度切り替え 　: Q/E"));
+			DrawFont::GetInstance()->Draw(Vector2(10.0f, 200.0f), MyUtil::toString("輝度の閾値   : Y/G : %.2f", brightPassThreshold));
+			DrawFont::GetInstance()->Draw(Vector2(10.0f, 220.0f), MyUtil::toString("元画像の彩度  : P/L : %.2f", baseSaturation));
+			DrawFont::GetInstance()->Draw(Vector2(10.0f, 240.0f), MyUtil::toString("元画像の輝度  : O/K : %.2f", baseIntensity));
+			DrawFont::GetInstance()->Draw(Vector2(10.0f, 260.0f), MyUtil::toString("ブルームの彩度 : I/J : %.2f", bloomSaturation));
+			DrawFont::GetInstance()->Draw(Vector2(10.0f, 280.0f), MyUtil::toString("ブルームの輝度 : U/H : %.2f", bloomIntensity));
+			DrawFont::GetInstance()->Draw(Vector2(10.0f, 300.0f), MyUtil::toString("パラメータの初期化 : R"));
 		}
 		else
 		{
-			DrawFont::GetInstance()->Draw(Vector2(10.0f, 30.0f), DrawFont::GetInstance()->format("DebugText : SPACE"));
+			DrawFont::GetInstance()->Draw(Vector2(10.0f, 30.0f), MyUtil::toString("DebugText : SPACE"));
 		}
-
 		
 		//SpriteManager::GetInstance()->DrawGraph(
 		//	Vector2(100, 100), 

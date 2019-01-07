@@ -32,32 +32,3 @@ void DrawFont::Draw(Vector2 position, const std::string& text)
 
 	m_Effect.End();
 }
-
-std::string DrawFont::format(const char * format, ...)
-throw(const char *)
-{
-	va_list v;				// 可変長引数型
-	int num = 0;			// バイト数
-	int res = 0;			// 返り値
-	std::string ret;		// 返り値
-
-	va_start(v, format);	// 可変長引数操作開始
-
-	num = _vscprintf(format, v) + 1;				// 書式展開後のバイト数取得
-	char* buf = new char[num];						// バッファメモリアロケーション
-
-	res = _vsnprintf_s(buf, num, num, format, v);	// バッファに書式展開後の文字列を設定
-	if (res < 0)
-	{
-		va_end(v);				// 可変長引数操作終了
-		delete[] buf;			// バッファ解放
-		throw "_vsnprintf_s error";
-	}
-
-	ret = buf;				// stringに変換
-
-	va_end(v);				// 可変長引数操作終了
-	delete[] buf;			// バッファ解放
-
-	return ret;
-}
