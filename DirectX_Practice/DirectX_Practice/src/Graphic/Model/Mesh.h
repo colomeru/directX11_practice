@@ -4,7 +4,6 @@
 #include "../../util/math/Color.h"
 
 #include <vector>
-
 #include "../Reader/PMXFileReader.h"
 #include "../Reader/PMDFileReader.h"
 

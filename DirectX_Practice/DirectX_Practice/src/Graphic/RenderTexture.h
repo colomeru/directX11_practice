@@ -1,9 +1,8 @@
 #pragma once
-#include <d3d11.h>
-#include <atlbase.h>
-#include <string>
 #include "../DirectX/RenderTarget.h"
 #include "../DirectX/DepthStencil.h"
+#include "../DirectX/ShaderResource.h"
+#include <string>
 
 class RenderTexture
 {
@@ -28,15 +27,13 @@ public:
 	int GetWidth() const;
 	// 縦幅取得
 	int GetHeight() const;
-
-public:
-	CComPtr<ID3D11ShaderResourceView>	pSRV;				// シェーダリソースビュー
-	CComPtr<ID3D11SamplerState>			pSampler;			// サンプラー
+	// シェーダーリソース取得
+	ShaderResource GetShaderResource() const;
 
 private:
 	RenderTarget				m_RT;				// 現在のレンダーターゲット
 	DepthStencil*				m_pDS;				// 現在のデプスステンシル
-
+	ShaderResource				m_Res;				// シェーダーリソース
 	unsigned int				m_Width;			// 画面の横幅
 	unsigned int				m_Height;			// 画面の縦幅
 

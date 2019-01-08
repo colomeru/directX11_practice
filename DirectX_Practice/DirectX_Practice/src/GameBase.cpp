@@ -561,10 +561,10 @@ bool GameBase::Run(HINSTANCE hIns)
 		case DRAW_PATTERN::Bloom:
 		{
 			//SpriteManager::GetInstance()->DrawGraph(Vector2::Zero, effectBloomCombineRT); break;
-			SpriteManager::GetInstance()->DrawGraph(Vector2::Zero, rtBright.pSRV.p, rtBright.pSampler.p, rtBright.GetWidth() / 2, rtBright.GetHeight() / 2);
-			SpriteManager::GetInstance()->DrawGraph(Vector2(0, m_Height / 2), rtBloomCombine.pSRV.p, rtBloomCombine.pSampler.p, rtBloomCombine.GetWidth() / 2, rtBloomCombine.GetHeight() / 2);
-			SpriteManager::GetInstance()->DrawGraph(Vector2(m_Width / 2, 0), rtBlurH.pSRV.p, rtBlurH.pSampler.p, rtBlurH.GetWidth() / 2, rtBlurH.GetHeight() / 2); 
-			SpriteManager::GetInstance()->DrawGraph(Vector2(m_Width / 2, m_Height / 2), rtBlurVRT.pSRV.p, rtBlurVRT.pSampler.p, rtBlurVRT.GetWidth() / 2, rtBlurVRT.GetHeight() / 2);
+			SpriteManager::GetInstance()->DrawGraph(Vector2::Zero, rtBright.GetShaderResource(), rtBright.GetWidth() / 2, rtBright.GetHeight() / 2);
+			SpriteManager::GetInstance()->DrawGraph(Vector2(0, m_Height / 2), rtBloomCombine.GetShaderResource(), rtBloomCombine.GetWidth() / 2, rtBloomCombine.GetHeight() / 2);
+			SpriteManager::GetInstance()->DrawGraph(Vector2(m_Width / 2, 0), rtBlurH.GetShaderResource(), rtBlurH.GetWidth() / 2, rtBlurH.GetHeight() / 2); 
+			SpriteManager::GetInstance()->DrawGraph(Vector2(m_Width / 2, m_Height / 2), rtBlurVRT.GetShaderResource(), rtBlurVRT.GetWidth() / 2, rtBlurVRT.GetHeight() / 2);
 			break;
 		}
 		case DRAW_PATTERN::Uncharted2: SpriteManager::GetInstance()->DrawGraph(Vector2::Zero, rtUncharted2ToneMap);	break;

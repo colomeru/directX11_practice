@@ -13,8 +13,6 @@
 
 ShadowMap::ShadowMap() :
 	m_pConstantBuffer(nullptr),
-	m_pSRV(nullptr),
-	m_pSampler(nullptr),
 	m_TexSize(0),
 	m_pShadowBiasCB(nullptr),
 	m_ShadowThreshold(1.0f),
@@ -44,7 +42,7 @@ ShadowMap::ShadowMap() :
 	smpSDesc.MaxLOD			= +FLT_MAX;
 
 	// シャドウマッピング用サンプラステートの生成
-	DirectX11::GetInstance()->GetDevice()->CreateSamplerState(&smpSDesc, &m_pSampler);
+	DirectX11::GetInstance()->GetDevice()->CreateSamplerState(&smpSDesc, &m_Res.pSampler.p);
 }
 
 ShadowMap::~ShadowMap()
@@ -53,7 +51,7 @@ ShadowMap::~ShadowMap()
 
 bool ShadowMap::Create(UINT size)
 {
-	m_pSRV.Release();
+	m_Res.pSRV.Release();
 
 	m_TexSize = size;
 
@@ -77,12 +75,12 @@ bool ShadowMap::Create(UINT size)
 	// シャドウマップ用のテクスチャの生成
 	Texture shadowTexture;
 	hr = shadowTexture.Create(std);
-	if (!SUCCEEDED(hr))
+	if (FAILED(hr))
 		return false;
 
 	// 深度ステンシルテクスチャを生成
 	hr = m_DS.Create(&shadowTexture, DXGI_FORMAT_D24_UNORM_S8_UINT);
-	if (!SUCCEEDED(hr))
+	if (FAILED(hr))
 		return false;
 
 	// シェーダリソースビューの設定
@@ -93,8 +91,8 @@ bool ShadowMap::Create(UINT size)
 	srvDesc.Texture2D.MipLevels = 1;
 
 	// シェーダリソースビューの生成
-	hr = DirectX11::GetInstance()->GetDevice()->CreateShaderResourceView(shadowTexture.Get(), &srvDesc, &m_pSRV);
-	if (!SUCCEEDED(hr))
+	hr = DirectX11::GetInstance()->GetDevice()->CreateShaderResourceView(shadowTexture.Get(), &srvDesc, &m_Res.pSRV.p);
+	if (FAILED(hr))
 		return false;
 
 	return true;
@@ -141,6 +139,11 @@ void ShadowMap::End(Effect& effect)
 	m_pPrevRTV.Release();
 }
 
+ShaderResource ShadowMap::GetShaderResource() const
+{
+	return m_Res;
+}
+
 void ShadowMap::Set()
 {
 	static const Matrix g_ShadowBias = {
@@ -167,17 +170,13 @@ void ShadowMap::Set()
 	DirectX11::GetInstance()->GetContext()->UpdateSubresource(m_pShadowBiasCB, 0, NULL, &biasCB, 0, 0);
 	DirectX11::GetInstance()->GetContext()->PSSetConstantBuffers(3, 1, &m_pShadowBiasCB.p);
 
-	DirectX11::GetInstance()->GetContext()->PSSetShaderResources(3, 1, &m_pSRV.p);
-	DirectX11::GetInstance()->GetContext()->PSSetSamplers(3, 1, &m_pSampler.p);
+	m_Res.Set(RES_SET_SLOT);
 }
 
 void ShadowMap::Clear()
 {
-	CComPtr<ID3D11ShaderResourceView>	pNullSRV;
-	CComPtr<ID3D11SamplerState>			pNullSampler;
-
-	DirectX11::GetInstance()->GetContext()->PSSetShaderResources(3, 1, &pNullSRV);
-	DirectX11::GetInstance()->GetContext()->PSSetSamplers(3, 1, &pNullSampler);
+	ShaderResource clearRes;
+	clearRes.Set(RES_SET_SLOT);
 }
 
 void ShadowMap::Update()

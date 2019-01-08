@@ -5,9 +5,6 @@
 #include <wincodec.h>
 
 Sprite::Sprite() :
-	m_pSRV(nullptr),
-	m_pSampler(nullptr),
-	m_pTexture(nullptr),
 	m_Width(0),
 	m_Height(0)
 {
@@ -19,14 +16,18 @@ Sprite::~Sprite()
 
 void Sprite::Begin() const
 {
-	DirectX11::GetInstance()->GetContext()->PSSetShaderResources(0, 1, &m_pSRV.p);
-	DirectX11::GetInstance()->GetContext()->PSSetSamplers(0, 1, &m_pSampler.p);
+	m_Res.Set();
+}
+
+void Sprite::End()
+{
+	ShaderResource clearRes;
+	clearRes.Set();
 }
 
 bool Sprite::Create(const std::string & filePath)
 {
 	HRESULT hr;
-	CComPtr<ID3D11Resource>	pRes;
 
 	// キャスト
 	WCHAR	wc[100];
@@ -34,7 +35,8 @@ bool Sprite::Create(const std::string & filePath)
 	mbstowcs_s(&ret, wc, 100, filePath.c_str(), _TRUNCATE);
 
 	// テクスチャの読み込み
-	hr = DirectX::CreateWICTextureFromFile(DirectX11::GetInstance()->GetDevice(), wc, &pRes, &m_pSRV.p);
+	CComPtr<ID3D11Resource>	pRes;
+	hr = DirectX::CreateWICTextureFromFile(DirectX11::GetInstance()->GetDevice(), wc, &pRes, &m_Res.pSRV.p);
 	if (FAILED(hr))
 	{
 		MessageBox(NULL, _T("Sprite_Load_Error"), _T(filePath.c_str()), MB_OK);
@@ -87,7 +89,7 @@ bool Sprite::Create(const std::string & filePath)
 	smpDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 
 	// サンプラステートの生成
-	DirectX11::GetInstance()->GetDevice()->CreateSamplerState(&smpDesc, &m_pSampler);
+	hr = DirectX11::GetInstance()->GetDevice()->CreateSamplerState(&smpDesc, &m_Res.pSampler.p);
 
 	return true;
 }
@@ -108,23 +110,23 @@ bool Sprite::Create(const Texture * pTexture)
 	srvDesc.Texture2D.MipLevels			= texDesc.MipLevels;
 
 	// ShaderResourceViewを作成する
-	hr = DirectX11::GetInstance()->GetDevice()->CreateShaderResourceView(pTexture->Get(), &srvDesc, &m_pSRV);
+	hr = DirectX11::GetInstance()->GetDevice()->CreateShaderResourceView(pTexture->Get(), &srvDesc, &m_Res.pSRV.p);
 
-	if (!SUCCEEDED(hr))
+	if (FAILED(hr))
 		return false;
 
 	// シェーダ用にサンプラを作成する
-	D3D11_SAMPLER_DESC samDesc;
-	ZeroMemory(&samDesc, sizeof(samDesc));
-	samDesc.Filter			= D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	samDesc.AddressU		= D3D11_TEXTURE_ADDRESS_WRAP;
-	samDesc.AddressV		= D3D11_TEXTURE_ADDRESS_WRAP;
-	samDesc.AddressW		= D3D11_TEXTURE_ADDRESS_WRAP;
-	samDesc.MaxAnisotropy	= 1;
-	samDesc.ComparisonFunc	= D3D11_COMPARISON_ALWAYS;
-	samDesc.MaxLOD			= D3D11_FLOAT32_MAX;
+	D3D11_SAMPLER_DESC smpDesc;
+	ZeroMemory(&smpDesc, sizeof(smpDesc));
+	smpDesc.Filter			= D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	smpDesc.AddressU		= D3D11_TEXTURE_ADDRESS_WRAP;
+	smpDesc.AddressV		= D3D11_TEXTURE_ADDRESS_WRAP;
+	smpDesc.AddressW		= D3D11_TEXTURE_ADDRESS_WRAP;
+	smpDesc.MaxAnisotropy	= 1;
+	smpDesc.ComparisonFunc	= D3D11_COMPARISON_ALWAYS;
+	smpDesc.MaxLOD			= D3D11_FLOAT32_MAX;
 
-	hr = DirectX11::GetInstance()->GetDevice()->CreateSamplerState(&samDesc, &m_pSampler);
+	hr = DirectX11::GetInstance()->GetDevice()->CreateSamplerState(&smpDesc, &m_Res.pSampler.p);
 
 	return SUCCEEDED(hr);
 }
@@ -137,4 +139,9 @@ unsigned int Sprite::GetWidth() const
 unsigned int Sprite::GetHeight() const
 {
 	return m_Height;
+}
+
+ShaderResource Sprite::GetShaderResource() const
+{
+	return m_Res;
 }

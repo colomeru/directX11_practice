@@ -9,6 +9,7 @@
 #include "../Shader/Effect.h"
 
 struct Vector2;
+struct ShaderResource;
 class RenderTexture;
 
 class SpriteManager : public Singleton<SpriteManager>
@@ -31,6 +32,8 @@ public:
 	void DrawGraph(float x, float y, unsigned int width, unsigned int height);
 	// •`‰æ
 	void DrawGraph(Vector2 position, ID3D11ShaderResourceView* srv, ID3D11SamplerState* sampler, unsigned int width, unsigned int height);
+	// •`‰æ
+	void DrawGraph(Vector2 position, const ShaderResource& res, unsigned int width, unsigned int height);
 	// •`‰æ
 	void DrawGraph(Vector2 position, const RenderTexture& renderTexture);
 

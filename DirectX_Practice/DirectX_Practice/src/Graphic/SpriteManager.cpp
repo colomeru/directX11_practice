@@ -8,6 +8,7 @@
 #include "../util/math/Vector2.h"
 #include "../util/math/Vector3.h"
 #include "RenderTexture.h"
+#include "../DirectX/ShaderResource.h"
 
 SpriteManager::SpriteManager() :
 	m_pVertexBuffer(nullptr),
@@ -97,18 +98,21 @@ void SpriteManager::DrawGraph(Vector2 position, ID3D11ShaderResourceView* srv, I
 	DirectX11::GetInstance()->SetAlphaBlend(false, false);
 
 	// å„èàóù
-	CComPtr<ID3D11ShaderResourceView> pNullSRV;
-	CComPtr<ID3D11SamplerState> pNullSampler;
-
-	DirectX11::GetInstance()->GetContext()->PSSetSamplers(0, 1, &pNullSampler);
-	DirectX11::GetInstance()->GetContext()->PSSetShaderResources(0, 1, &pNullSRV);
+	ShaderResource clearRes;
+	clearRes.Set();
 
 	m_Effect.End();
 }
 
+void SpriteManager::DrawGraph(Vector2 position, const ShaderResource & res, unsigned int width, unsigned int height)
+{
+	DrawGraph(position, res.pSRV.p, res.pSampler.p, width, height);
+}
+
 void SpriteManager::DrawGraph(Vector2 position, const RenderTexture & renderTexture)
 {
-	DrawGraph(position, renderTexture.pSRV.p, renderTexture.pSampler.p, renderTexture.GetWidth(), renderTexture.GetHeight());
+	//DrawGraph(position, renderTexture.pSRV.p, renderTexture.pSampler.p, renderTexture.GetWidth(), renderTexture.GetHeight());
+	DrawGraph(position, renderTexture.GetShaderResource(), renderTexture.GetWidth(), renderTexture.GetHeight());
 }
 
 void SpriteManager::Draw(const SpritePtr & sprite, Vector2 position, Vector2 size)

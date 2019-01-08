@@ -1,6 +1,7 @@
 #include "MeshShader.h"
 #include "../DirectX/DirectX11.h"
 #include "../ConstantBuffer/ConstantBuffer.h"
+#include "../DirectX/ShaderResource.h"
 
 MeshShader::MeshShader(Effect & effect) :
 	m_Effect(effect),
@@ -31,10 +32,8 @@ void MeshShader::End()
 {
 	m_Effect.End();
 
-	CComPtr<ID3D11ShaderResourceView> pNullSRV;
-	DirectX11::GetInstance()->GetContext()->PSSetShaderResources(0, 1, &pNullSRV.p);
-	CComPtr<ID3D11SamplerState>	pNullSamper;
-	DirectX11::GetInstance()->GetContext()->PSSetSamplers(0, 1, &m_pSampler.p);
+	ShaderResource clearRes;
+	clearRes.Set();
 }
 
 void MeshShader::Material(const Mesh::Material& material, ID3D11Buffer* constantBuffer, ID3D11SamplerState* sampler)

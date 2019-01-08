@@ -1,6 +1,5 @@
 #pragma once
-#include <d3d11.h>
-#include <atlbase.h>
+#include "../DirectX/ShaderResource.h"
 #include <string>
 
 class Texture;
@@ -14,6 +13,8 @@ public:
 	~Sprite();
 	// 描画
 	void Begin() const;
+	// 終了
+	void End();
 	// テクスチャから生成
 	bool Create(const std::string& filePath);
 	// テクスチャから生成
@@ -23,13 +24,11 @@ public:
 	unsigned int GetWidth() const;
 	// 縦幅取得
 	unsigned int GetHeight() const;
-
-public:
-	CComPtr<ID3D11ShaderResourceView>	m_pSRV;
-	CComPtr<ID3D11SamplerState>			m_pSampler;
-	Texture*							m_pTexture;
+	// シェーダーリソース取得
+	ShaderResource GetShaderResource() const;
 
 private:
 	unsigned int						m_Width;
 	unsigned int						m_Height;
+	ShaderResource						m_Res;
 };

@@ -5,8 +5,6 @@
 
 RenderTexture::RenderTexture(DepthStencil * pDS) :
 	m_pDS(pDS),
-	pSRV(nullptr),
-	pSampler(nullptr),
 	m_Width(0),
 	m_Height(0),
 	m_pPrevRTV(nullptr)
@@ -57,7 +55,8 @@ HRESULT RenderTexture::Create(UINT width, UINT height)
 	srvDesc.Texture2D.MipLevels = 1;
 
 	// シェーダリソースビューの生成
-	hr = DirectX11::GetInstance()->GetDevice()->CreateShaderResourceView(pTexture.Get(), &srvDesc, &pSRV);
+	//hr = DirectX11::GetInstance()->GetDevice()->CreateShaderResourceView(pTexture.Get(), &srvDesc, &pSRV);
+	hr = DirectX11::GetInstance()->GetDevice()->CreateShaderResourceView(pTexture.Get(), &srvDesc, &m_Res.pSRV.p);
 	if (FAILED(hr))
 		return hr;
 
@@ -73,7 +72,8 @@ HRESULT RenderTexture::Create(UINT width, UINT height)
 	smpDesc.MaxLOD		   = D3D11_FLOAT32_MAX;
 
 	// サンプラステートの生成
-	hr = DirectX11::GetInstance()->GetDevice()->CreateSamplerState(&smpDesc, &pSampler);
+	//hr = DirectX11::GetInstance()->GetDevice()->CreateSamplerState(&smpDesc, &pSampler);
+	hr = DirectX11::GetInstance()->GetDevice()->CreateSamplerState(&smpDesc, &m_Res.pSampler.p);
 
 	return hr;
 }
@@ -86,11 +86,8 @@ void RenderTexture::Begin()
 
 void RenderTexture::End(UINT slot)
 {
-	CComPtr<ID3D11ShaderResourceView> pNullSRV;
-	CComPtr<ID3D11SamplerState> pNullSampler;
-
-	DirectX11::GetInstance()->GetContext()->PSSetShaderResources(slot, 1, &pNullSRV.p);
-	DirectX11::GetInstance()->GetContext()->PSSetSamplers(slot, 1, &pNullSampler.p);
+	ShaderResource clearRes;
+	clearRes.Set(slot);
 
 	if (m_pPrevRTV)
 	{
@@ -101,8 +98,7 @@ void RenderTexture::End(UINT slot)
 
 void RenderTexture::Set(const RenderTexture & pTexture, UINT slot)
 {
-	DirectX11::GetInstance()->GetContext()->PSSetShaderResources(slot, 1, &pTexture.pSRV.p);
-	DirectX11::GetInstance()->GetContext()->PSSetSamplers(slot, 1, &pTexture.pSampler.p);
+	pTexture.GetShaderResource().Set(slot);
 }
 
 void RenderTexture::Clear()
@@ -134,4 +130,9 @@ int RenderTexture::GetWidth() const
 int RenderTexture::GetHeight() const
 {
 	return m_Height;
+}
+
+ShaderResource RenderTexture::GetShaderResource() const
+{
+	return m_Res;
 }

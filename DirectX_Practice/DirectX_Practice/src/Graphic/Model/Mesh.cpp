@@ -127,7 +127,7 @@ void Mesh::Load(const mmd::PMD::PMDFile & pmd, const std::string & folderPATH)
 		if (textures.count(textureName) > 0)
 			m_Materials[i].pTexture = ptextures.at(textures.at(textureName));
 		else
-			m_Materials[i].pTexture = tex.pSRV;
+			m_Materials[i].pTexture = tex.GetShaderResource().pSRV.p;
 	}
 
 	// インデックスデータをint型に変換
@@ -211,7 +211,7 @@ void Mesh::Load(const mmd::pmx::PMXFile & pmx, const std::string & folderPATH)
 		if (pmx.mesh.materials[i].texture_index >= 0)
 			m_Materials[i].pTexture = ptextures[pmx.mesh.materials[i].texture_index];
 		else
-			m_Materials[i].pTexture = tex.pSRV;
+			m_Materials[i].pTexture = tex.GetShaderResource().pSRV.p;
 	}
 
 	// 頂点バッファの生成
