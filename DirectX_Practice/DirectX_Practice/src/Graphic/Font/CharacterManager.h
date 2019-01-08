@@ -28,6 +28,8 @@ public:
 	void Create(const std::string& fileName, int fontSize);
 	// 描画
 	void Draw(Vector2 position, const std::string& text, const Effect& effect);
+	// 文字データの入ったアトラステクスチャの取得
+	RenderTexture GetRenderTexture() const;
 
 private:
 	// 文字データ生成
@@ -36,11 +38,11 @@ private:
 	void CreateCharacter(const std::string& str);
 
 public:
-	RenderTexture	m_FontTexture;
 
 private:
 	std::string		m_FontName;
 	int				m_FontSize;
+	RenderTexture	m_FontTexture;
 
 	CComPtr<ID3D11Buffer>	m_pConstantBuffer;	// 定数バッファ
 

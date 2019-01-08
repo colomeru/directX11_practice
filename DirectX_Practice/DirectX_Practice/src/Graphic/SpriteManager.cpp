@@ -54,6 +54,11 @@ bool SpriteManager::Load(const std::string & fileName, const SPRITE_ID & id)
 	return true;
 }
 
+SpritePtr SpriteManager::Get(SPRITE_ID id) const
+{
+	return m_SpriteMap.at(id);
+}
+
 void SpriteManager::Clear()
 {
 	m_SpriteMap.clear();

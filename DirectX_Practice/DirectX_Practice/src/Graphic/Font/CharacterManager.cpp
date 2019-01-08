@@ -14,7 +14,6 @@ CharacterManager::CharacterManager() :
 	m_FontTexture(nullptr)
 {
 	m_FontMap.clear();
-	// 定数バッファの生成
 	DirectX11::GetInstance()->CreateBuffer(&m_pConstantBuffer, nullptr, sizeof(UV_CB), D3D11_BIND_CONSTANT_BUFFER);
 }
 
@@ -94,6 +93,11 @@ void CharacterManager::Draw(Vector2 position, const std::string & text, const Ef
 	}
 }
 
+RenderTexture CharacterManager::GetRenderTexture() const
+{
+	return m_FontTexture;
+}
+
 void CharacterManager::CreateCharacter(TCHAR * c)
 {
 	m_FontTexture.Begin();
@@ -101,13 +105,12 @@ void CharacterManager::CreateCharacter(TCHAR * c)
 	// ビューポートの変更
 	D3D11_VIEWPORT vp;
 	vp.Width  = m_FontTexture.GetWidth();
-	vp.Height = m_FontTexture.GetWidth();
+	vp.Height = m_FontTexture.GetHeight();
 	vp.MinDepth = 0.0f;
 	vp.MaxDepth = 1.0f;
 	vp.TopLeftX = 0;
 	vp.TopLeftY = 0;
 	DirectX11::GetInstance()->GetContext()->RSSetViewports(1, &vp);
-
 
 	Character character;
 	character.pTexture = std::make_shared<Sprite>();
@@ -153,6 +156,8 @@ void CharacterManager::CreateCharacter(const std::string & str)
 		else
 			c = str.at(i);
 
-		CreateCharacter((TCHAR*)c.c_str());
+		// 文字データがなかったら生成
+		if (m_FontMap.count((TCHAR*)c.c_str()) == 0)
+			CreateCharacter((TCHAR*)c.c_str());
 	}
 }

@@ -17,6 +17,9 @@ public:
 	void Load(const std::string& fileName, int fontSize);
 	// 描画
 	void Draw(Vector2 position, const std::string& text);
+	
+	// Debug用フォントの取得
+	CharacterManager GetDebugFont() const;
 
 private:
 	// コンストラクタ

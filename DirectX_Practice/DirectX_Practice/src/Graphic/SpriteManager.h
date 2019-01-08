@@ -23,6 +23,8 @@ public:
 	void Initialize(int width, int height);
 	// “Ç‚İ‚İ
 	bool Load(const std::string& fileName, const SPRITE_ID& id);
+	// æ“¾
+	SpritePtr Get(SPRITE_ID id) const;
 	// ƒNƒŠƒA
 	void Clear();
 
