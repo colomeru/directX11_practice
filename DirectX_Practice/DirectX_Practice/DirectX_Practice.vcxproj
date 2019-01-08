@@ -166,9 +166,9 @@
     <ClInclude Include="src\DirectX\DepthStencil.h" />
     <ClInclude Include="src\DirectX\DirectX11.h" />
     <ClInclude Include="src\DirectX\ShaderResource.h" />
-    <ClInclude Include="src\Graphic\Font\DrawFont.h" />
     <ClInclude Include="src\Graphic\Font\FontManager.h" />
-    <ClInclude Include="src\Graphic\Font\FontTexture.h" />
+    <ClInclude Include="src\Graphic\Font\CharacterManager.h" />
+    <ClInclude Include="src\Graphic\Font\CharacterTexture.h" />
     <ClInclude Include="src\Graphic\Model.h" />
     <ClInclude Include="src\Graphic\ModelManager.h" />
     <ClInclude Include="src\Graphic\ModelPtr.h" />
@@ -431,9 +431,9 @@
     <ClCompile Include="src\DirectX\DepthStencil.cpp" />
     <ClCompile Include="src\DirectX\DirectX11.cpp" />
     <ClCompile Include="src\DirectX\ShaderResource.cpp" />
-    <ClCompile Include="src\Graphic\Font\DRAWFONT.CPP" />
+    <ClCompile Include="src\Graphic\Font\CharacterManager.cpp" />
+    <ClCompile Include="src\Graphic\Font\CharacterTexture.cpp" />
     <ClCompile Include="src\Graphic\Font\FontManager.cpp" />
-    <ClCompile Include="src\Graphic\Font\FontTexture.cpp" />
     <ClCompile Include="src\Graphic\Model.cpp" />
     <ClCompile Include="src\Graphic\ModelManager.cpp" />
     <ClCompile Include="src\Graphic\Model\Animation.cpp" />

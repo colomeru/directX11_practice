@@ -9,7 +9,7 @@
 #include "util/MyUtil.h"
 #include "util/math/MathHelper.h"
 #include "util/math/Vector2.h"
-#include "Graphic/Font/DrawFont.h"
+#include "Graphic/Font/FontManager.h"
 
 ShadowMap::ShadowMap() :
 	m_pConstantBuffer(nullptr),
@@ -175,8 +175,8 @@ void ShadowMap::Set()
 
 void ShadowMap::Clear()
 {
-	ShaderResource clearRes;
-	clearRes.Set(RES_SET_SLOT);
+	ShaderResource cleanRes;
+	cleanRes.Set(RES_SET_SLOT);
 }
 
 void ShadowMap::Update()
@@ -202,7 +202,7 @@ void ShadowMap::Update()
 
 void ShadowMap::Draw()
 {
-	DrawFont::GetInstance()->Draw(Vector2(10.0f, 320.0f), MyUtil::toString("m_Bias : K/M : %.7f", m_Bias));
-	DrawFont::GetInstance()->Draw(Vector2(10.0f, 340.0f), MyUtil::toString("m_SlopeScaledBias : J/N : %.2f", m_SlopeScaledBias));
-	DrawFont::GetInstance()->Draw(Vector2(10.0f, 360.0f), MyUtil::toString("m_DepthBiasClamp : H/B : %.2f", m_DepthBiasClamp));
+	FontManager::GetInstance()->Draw(Vector2(10.0f, 320.0f), MyUtil::toString("m_Bias : K/M : %.7f", m_Bias));
+	FontManager::GetInstance()->Draw(Vector2(10.0f, 340.0f), MyUtil::toString("m_SlopeScaledBias : J/N : %.2f", m_SlopeScaledBias));
+	FontManager::GetInstance()->Draw(Vector2(10.0f, 360.0f), MyUtil::toString("m_DepthBiasClamp : H/B : %.2f", m_DepthBiasClamp));
 }

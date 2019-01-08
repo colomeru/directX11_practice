@@ -1,47 +1,30 @@
 #pragma once
-#include "../SpritePtr.h"
-#include <unordered_map>
+#include "../../util/Singleton.h"
 #include <string>
-#include <tchar.h>
-#include "../RenderTexture.h"
-#include "../../util/math/Vector2.h"
+#include "CharacterManager.h"
+#include "../../Shader/Effect.h"
 
-class FontManager
+struct Vector2;
+
+class FontManager : public Singleton<FontManager>
 {
 public:
-	struct Character
-	{
-		SpritePtr	pTexture;
-		Vector2		uv;
-	};
+	//
+	friend class Singleton<FontManager>;
 
 public:
-	// コンストラクタ
-	FontManager();
-	// デストラクタ
-	~FontManager();
-
-	// フォントデータ生成
-	void Create(const std::string& fileName, int fontSize);
+	// フォント読み込み
+	void Load(const std::string& fileName, int fontSize);
 	// 描画
 	void Draw(Vector2 position, const std::string& text);
 
 private:
-	// 文字データ生成
-	void CreateCharacter(TCHAR * c);
-	// 文字データ生成
-	void CreateCharacter(const std::string& str);
-
-public:
-	RenderTexture	m_FontTexture;
+	// コンストラクタ
+	FontManager();
+	// デストラクタ
+	virtual ~FontManager();
 
 private:
-	std::string		m_FontName;
-	int				m_FontSize;
-
-	CComPtr<ID3D11Buffer>	m_pConstantBuffer;	// 定数バッファ
-
-	std::unordered_map<std::string, Character>	m_FontMap;
-	int		m_RowCount;
-	int		m_ColCount;
+	CharacterManager	m_DebugFontManager;
+	Effect				m_Effect;
 };

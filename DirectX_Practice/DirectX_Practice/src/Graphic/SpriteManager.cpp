@@ -2,13 +2,12 @@
 #include "Sprite.h"
 #include "../DirectX/DirectX11.h"
 #include "../DirectX/Texture.h"
+#include "../DirectX/ShaderResource.h"
 #include "../ConstantBuffer/ConstantBuffer.h"
 #include "../Vertex.h"
-#include "../Shader/ShaderManager.h"
+#include "RenderTexture.h"
 #include "../util/math/Vector2.h"
 #include "../util/math/Vector3.h"
-#include "RenderTexture.h"
-#include "../DirectX/ShaderResource.h"
 
 SpriteManager::SpriteManager() :
 	m_pVertexBuffer(nullptr),
@@ -98,8 +97,8 @@ void SpriteManager::DrawGraph(Vector2 position, ID3D11ShaderResourceView* srv, I
 	DirectX11::GetInstance()->SetAlphaBlend(false, false);
 
 	// å„èàóù
-	ShaderResource clearRes;
-	clearRes.Set();
+	ShaderResource cleanRes;
+	cleanRes.Set();
 
 	m_Effect.End();
 }
@@ -111,7 +110,6 @@ void SpriteManager::DrawGraph(Vector2 position, const ShaderResource & res, unsi
 
 void SpriteManager::DrawGraph(Vector2 position, const RenderTexture & renderTexture)
 {
-	//DrawGraph(position, renderTexture.pSRV.p, renderTexture.pSampler.p, renderTexture.GetWidth(), renderTexture.GetHeight());
 	DrawGraph(position, renderTexture.GetShaderResource(), renderTexture.GetWidth(), renderTexture.GetHeight());
 }
 

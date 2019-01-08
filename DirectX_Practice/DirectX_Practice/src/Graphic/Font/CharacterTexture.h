@@ -1,17 +1,18 @@
 #pragma once
-#include <d3d11.h>
 #include <string>
 #include "../../DirectX/Texture.h"
 
-class FontTexture
+class CharacterTexture
 {
 public:
 	// コンストラクタ
-	FontTexture();
+	CharacterTexture();
 	// デストラクタ
-	~FontTexture();
+	~CharacterTexture();
 	// 生成
 	Texture* Create(const std::string& fontName, TCHAR* c, int fontsize);
+	// 取得
+	Texture* Get();
 
 private:
 	Texture		m_Texture;

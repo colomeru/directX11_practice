@@ -72,7 +72,6 @@ HRESULT RenderTexture::Create(UINT width, UINT height)
 	smpDesc.MaxLOD		   = D3D11_FLOAT32_MAX;
 
 	// サンプラステートの生成
-	//hr = DirectX11::GetInstance()->GetDevice()->CreateSamplerState(&smpDesc, &pSampler);
 	hr = DirectX11::GetInstance()->GetDevice()->CreateSamplerState(&smpDesc, &m_Res.pSampler.p);
 
 	return hr;
@@ -86,8 +85,8 @@ void RenderTexture::Begin()
 
 void RenderTexture::End(UINT slot)
 {
-	ShaderResource clearRes;
-	clearRes.Set(slot);
+	ShaderResource cleanRes;
+	cleanRes.Set(slot);
 
 	if (m_pPrevRTV)
 	{

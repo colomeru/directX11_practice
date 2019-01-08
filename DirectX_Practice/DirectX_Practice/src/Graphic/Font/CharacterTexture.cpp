@@ -1,16 +1,16 @@
-#include "FontTexture.h"
+#include "CharacterTexture.h"
 #include "../../DirectX/DirectX11.h"
 #include <debugapi.h>
 
-FontTexture::FontTexture()
+CharacterTexture::CharacterTexture()
 {
 }
 
-FontTexture::~FontTexture()
+CharacterTexture::~CharacterTexture()
 {
 }
 
-Texture* FontTexture::Create(const std::string& fontName, TCHAR* c, int fontsize)
+Texture* CharacterTexture::Create(const std::string& fontName, TCHAR* c, int fontsize)
 {
 	HRESULT hr;
 
@@ -134,5 +134,10 @@ Texture* FontTexture::Create(const std::string& fontName, TCHAR* c, int fontsize
 
 	delete[] ptr;
 
+	return &m_Texture;
+}
+
+Texture * CharacterTexture::Get()
+{
 	return &m_Texture;
 }

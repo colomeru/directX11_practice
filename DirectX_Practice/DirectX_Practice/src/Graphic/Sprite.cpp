@@ -21,8 +21,8 @@ void Sprite::Begin() const
 
 void Sprite::End()
 {
-	ShaderResource clearRes;
-	clearRes.Set();
+	ShaderResource cleanRes;
+	cleanRes.Set();
 }
 
 bool Sprite::Create(const std::string & filePath)
