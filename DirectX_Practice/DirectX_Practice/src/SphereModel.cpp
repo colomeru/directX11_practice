@@ -24,10 +24,12 @@ SphereModel::~SphereModel()
 
 void SphereModel::Draw()
 {
-	WorldCB cd;
+	WorldProjCB cd;
 	auto world = Matrix::CreateScale(Vector3(1000.0f, 1000.0f, 1000.0f))
 			   * Matrix::CreateTranslation(Camera::GetInstance()->GetPosition());
+	auto proj  = Matrix::CreatePerspectiveFieldOfView(60.0f, 1280.0f / 720.0f, 0.1f, 1000.0f);
 	cd.world = Matrix::Transpose(world);
+	cd.projection = Matrix::Transpose(proj);
 
 	DirectX11::GetInstance()->GetContext()->UpdateSubresource(m_pConstantBuffer, 0, NULL, &cd, 0, 0);
 	DirectX11::GetInstance()->GetContext()->VSSetConstantBuffers(1, 1, &m_pConstantBuffer.p);
