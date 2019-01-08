@@ -20,6 +20,7 @@
 // 管理クラス
 #include "Shader/ShaderManager.h"
 #include "Graphic/SpriteManager.h"
+#include "Graphic/Sprite.h"
 #include "Graphic/ModelManager.h"
 #include "Graphic/Model.h"
 #include "Graphic/RenderTexture.h"
@@ -47,7 +48,7 @@
 #include "Shader/MeshShader.h"
 #include "Shader/ShadowMapShader.h"
 
-#include <future>
+#include "SphereModel.h"
 
 enum class DRAW_PATTERN
 {
@@ -268,6 +269,8 @@ bool GameBase::Run(HINSTANCE hIns)
 	Effect effectBloomCombine(VERTEX_SHADER_ID::TEXTURE_SHADER, PIXEL_SHADER_ID::BLOOM_SHADER);
 	Effect effectUncharted2ToneMap(VERTEX_SHADER_ID::TEXTURE_SHADER, PIXEL_SHADER_ID::UNCHARTED2_TOONMAP_SHADER);
 
+	SphereModel sphere;
+
 	// ゲームループ
 	while (Window::GetInstance()->MessageHandling())
 	{
@@ -440,10 +443,9 @@ bool GameBase::Run(HINSTANCE hIns)
 		// カメラ情報反映
 		Camera::GetInstance()->Draw();
 
+		/* モデルの描画 */
 		// 影データセット
 		shadowMap.Set();
-
-		/* モデルの描画 */
 		MeshShader shadowShader(effectShadow);
 		stage->Draw(shadowShader, Matrix::Identity);
 		shadowMap.Clear();
@@ -467,6 +469,13 @@ bool GameBase::Run(HINSTANCE hIns)
 			ichigo->Draw(meshShader, worldMatrix);	break;
 		default: break;
 		}
+
+		DirectX11::GetInstance()->SetRasterizer(D3D11_FILL_SOLID, D3D11_CULL_NONE);
+		effectMesh.Begin();
+		auto sprite = SpriteManager::GetInstance()->Get(SPRITE_ID::TEST_SPRITE);
+		sprite->Begin();
+		sphere.Draw();
+		effectMesh.End();
 
 		//shadowMap.Clear();
 		rtDefault.End();
@@ -595,12 +604,7 @@ bool GameBase::Run(HINSTANCE hIns)
 			FontManager::GetInstance()->Draw(Vector2(10.0f, 30.0f), MyUtil::toString("DebugText : SPACE"));
 		}
 		
-		//SpriteManager::GetInstance()->DrawGraph(
-		//	Vector2(100, 100), 
-		//	DrawFont::GetInstance()->m_DebugFont.m_FontTexture.pSRV.p,
-		//	DrawFont::GetInstance()->m_DebugFont.m_FontTexture.pSampler.p,
-		//	DrawFont::GetInstance()->m_DebugFont.m_FontTexture.GetWidth(),
-		//	DrawFont::GetInstance()->m_DebugFont.m_FontTexture.GetHeight());
+		//SpriteManager::GetInstance()->DrawGraph(Vector2(100, 100), FontManager::GetInstance()->GetDebugFont().GetRenderTexture());
 
 		//shadowMap.Draw();
 		//SpriteManager::GetInstance()->Draw(SPRITE_ID::TEST_SPRITE, Vector2(100, 100));
@@ -650,6 +654,7 @@ void GameBase::LoadResources()
 
 	// スプライトの読み込み
 	SpriteManager::GetInstance()->Initialize(m_Width, m_Height);
-	SpriteManager::GetInstance()->Load("numakuro.png", SPRITE_ID::TEST_SPRITE);
-	//SpriteManager::GetInstance()->Load("yuingo.jpg", SPRITE_ID::TEST_SPRITE);
+	//SpriteManager::GetInstance()->Load("numakuro.png", SPRITE_ID::TEST_SPRITE);
+	SpriteManager::GetInstance()->Load("yuingo.jpg", SPRITE_ID::TEST_SPRITE);
+	SpriteManager::GetInstance()->Load("sky.png", SPRITE_ID::SKY_SPRITE);
 }

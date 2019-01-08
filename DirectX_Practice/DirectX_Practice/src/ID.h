@@ -5,6 +5,7 @@ enum class SPRITE_ID
 {
 	NONE,
 	TEST_SPRITE,
+	SKY_SPRITE,
 };
 
 // ƒ‚ƒfƒ‹ID
