@@ -27,7 +27,7 @@ public:
 
 
 	void Update();
-	void Draw();
+	void DebugDraw();
 
 private:
 	// シャドウマップ用シェーダーリソースセットスロット

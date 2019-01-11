@@ -57,7 +57,8 @@ Matrix Light::GetViewMatrix() const
 {
 	// フォーカス仮データ
 	// 中心やや上を見てるとする
-	Vector3 focus = Vector3(0.0f, 10.0f, 0.0f);
+	//Vector3 focus = Vector3(0.0f, 10.0f, 0.0f);
+	Vector3 focus = m_Position + m_Direction;
 
-	return Matrix::CreateLookAt(m_Position, focus, Vector3::Up);
+	return Matrix::CreateLookAt(m_Position, focus.Normalize(), Vector3::Up);
 }

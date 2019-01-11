@@ -15,6 +15,8 @@ void MeshShader::Begin()
 	// シェーダーをセット
 	m_Effect.Begin();
 
+	DirectX11::GetInstance()->SetRasterizer(D3D11_FILL_MODE::D3D11_FILL_SOLID, m_Material.cullMode);
+
 	// マテリアル情報をシェーダーに送信
 	MaterialCB cb{
 		m_Material.ambient,

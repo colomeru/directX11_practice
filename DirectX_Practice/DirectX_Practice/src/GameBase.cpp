@@ -1,6 +1,7 @@
 #include "GameBase.h"
 #include "Window.h"
 #include "Input/Keyboard.h"
+#include "Timer/MySleep.h"
 
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
@@ -15,7 +16,6 @@
 
 #include "Camera/Camera.h"
 #include "Light/Light.h"
-#include "Timer/MySleep.h"
 
 // 管理クラス
 #include "Shader/ShaderManager.h"
@@ -23,9 +23,10 @@
 #include "Graphic/Sprite.h"
 #include "Graphic/ModelManager.h"
 #include "Graphic/Model.h"
+#include "Graphic/Font/FontManager.h"
+
 #include "Graphic/RenderTexture.h"
 
-#include "Graphic/Font/FontManager.h"
 #include "ShadowMap.h"
 #include <Windows.h>
 
@@ -393,7 +394,7 @@ bool GameBase::Run(HINSTANCE hIns)
 			}
 		}
 
-		//shadowMap.Update();
+		shadowMap.Update();
 
 		Vector3 eye		= Vector3(0.0f, 13.0f,  -cl);
 		Vector3 focus	= Vector3(0.0f, 13.0f, 0.0f);
@@ -406,6 +407,7 @@ bool GameBase::Run(HINSTANCE hIns)
 
 		float deglight = MathHelper::ToDegrees(light);
 		Light::GetInstance()->SetPosition(Vector3(80.0f * MathHelper::Sin(deglight), 90.0f, -80.0f * MathHelper::Cos(deglight)));
+		Light::GetInstance()->SetDirection(Vector3(1.0f, -1.0f, 0.0f).Normalize());
 
 		auto worldMatrix = Matrix::CreateRotationY(angle);
 
@@ -414,8 +416,6 @@ bool GameBase::Run(HINSTANCE hIns)
 		/* 描画処理 */
 		// シャドウマップ処理
 		shadowMap.Begin(effectShadowMap);
-
-		DirectX11::GetInstance()->SetRasterizer(D3D11_FILL_SOLID, D3D11_CULL_FRONT);
 
 		// モデルの描画
 		stage->DrawForShadow(shadowMapShader, Matrix::Identity);
@@ -456,23 +456,20 @@ bool GameBase::Run(HINSTANCE hIns)
 		switch (drawModel)
 		{
 		case DRAW_MODEL::Mirai_Akari:
-			DirectX11::GetInstance()->SetRasterizer(D3D11_FILL_SOLID, D3D11_CULL_FRONT);
 			mirai_akari->Draw(meshShader, worldMatrix); break;
 		case DRAW_MODEL::Siro:
-			DirectX11::GetInstance()->SetRasterizer(D3D11_FILL_SOLID, D3D11_CULL_NONE);
 			siro->Draw(meshShader, worldMatrix); break;
 		case DRAW_MODEL::Kouhai_chan:
-			DirectX11::GetInstance()->SetRasterizer(D3D11_FILL_SOLID, D3D11_CULL_FRONT);
 			kouhai_chan->Draw(meshShader, worldMatrix); break;
 		case DRAW_MODEL::Ichigo:	
-			DirectX11::GetInstance()->SetRasterizer(D3D11_FILL_SOLID, D3D11_CULL_NONE);
 			ichigo->Draw(meshShader, worldMatrix);	break;
-		default: break;
+		default: 
+			break;
 		}
 
 		DirectX11::GetInstance()->SetRasterizer(D3D11_FILL_SOLID, D3D11_CULL_NONE);
 		effectMesh.Begin();
-		auto sprite = SpriteManager::GetInstance()->Get(SPRITE_ID::TEST_SPRITE);
+		auto sprite = SpriteManager::GetInstance()->Get(SPRITE_ID::SKY_SPRITE);
 		sprite->Begin();
 		sphere.Draw();
 		effectMesh.End();
@@ -606,7 +603,7 @@ bool GameBase::Run(HINSTANCE hIns)
 		
 		//SpriteManager::GetInstance()->DrawGraph(Vector2(100, 100), FontManager::GetInstance()->GetDebugFont().GetRenderTexture());
 
-		//shadowMap.Draw();
+		//shadowMap.DebugDraw();
 		//SpriteManager::GetInstance()->Draw(SPRITE_ID::TEST_SPRITE, Vector2(100, 100));
 
 		// FPS制御
@@ -624,8 +621,6 @@ bool GameBase::Run(HINSTANCE hIns)
 
 void GameBase::LoadResources()
 {
-	// リソース関係初期化
-
 	/* シェーダーの読み込み */
 	// 頂点シェーダの読み込み
 	ShaderManager::GetInstance()->Add(VERTEX_SHADER_ID::MESH_SHADER, std::make_shared<MeshVertexShader>());

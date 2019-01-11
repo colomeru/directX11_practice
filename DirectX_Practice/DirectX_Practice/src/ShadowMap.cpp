@@ -121,7 +121,7 @@ void ShadowMap::Begin(Effect& effect)
 	effect.Begin();
 
 	ViewProjCB cb{
-		Matrix::Transpose(Matrix::CreateLookAt(Light::GetInstance()->GetPosition(), Vector3(0.0f, 1.0f, 0.0f), Vector3::Up)),
+		Matrix::Transpose(Light::GetInstance()->GetViewMatrix()),
 		Matrix::Transpose(Matrix::CreatePerspectiveFieldOfView(60.0f, 1.0f, 0.1f, 5000.0f))
 	};
 
@@ -153,7 +153,7 @@ void ShadowMap::Set()
 		0.5f,  0.5f, 0.0f, 1.0f
 	};
 	
-	auto viewproj = Matrix::CreateLookAt(Light::GetInstance()->GetPosition(), Vector3(0.0f, 1.0f, 0.0f), Vector3::Up) * Matrix::CreatePerspectiveFieldOfView(60.0f, 1, 0.1f, 5000.0f);
+	auto viewproj = Light::GetInstance()->GetViewMatrix() * Matrix::CreatePerspectiveFieldOfView(60.0f, 1, 0.1f, 5000.0f);
 
 	/* シャドウマップデータのセット */
 	ShadowCB shadowCB{
@@ -200,7 +200,7 @@ void ShadowMap::Update()
 	m_DepthBiasClamp = MathHelper::Clamp(m_DepthBiasClamp, 0.0f, 1.0f);
 }
 
-void ShadowMap::Draw()
+void ShadowMap::DebugDraw()
 {
 	FontManager::GetInstance()->Draw(Vector2(10.0f, 320.0f), MyUtil::toString("m_Bias : K/M : %.7f", m_Bias));
 	FontManager::GetInstance()->Draw(Vector2(10.0f, 340.0f), MyUtil::toString("m_SlopeScaledBias : J/N : %.2f", m_SlopeScaledBias));

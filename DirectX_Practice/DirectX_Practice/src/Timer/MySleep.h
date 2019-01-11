@@ -18,7 +18,7 @@ public:
 	static float fps;
 
 private:
-	const float		MIN_FRAME_TIME = 1.0f / 60;
+	const float		MIN_FRAME_TIME = 1.0f / 60.0f;
 	float			m_FrameTime;
 	LARGE_INTEGER	m_TimeStart;
 	LARGE_INTEGER	m_TimeEnd;

@@ -6,7 +6,6 @@
 Model::Model() :
 	m_AlphaBlend(false, false)
 {
-	// 定数バッファの生成
 	DirectX11::GetInstance()->CreateBuffer(&m_pConstantBuffer, nullptr, sizeof(WorldCB), D3D11_BIND_CONSTANT_BUFFER);
 }
 
