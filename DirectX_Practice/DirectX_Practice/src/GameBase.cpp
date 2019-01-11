@@ -6,15 +6,15 @@
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
 
+#include <atlbase.h>
 #include "DirectX/DirectX11.h"
 #include "DirectX/Texture.h"
 #include "DirectX/RenderTarget.h"
 #include "DirectX/DepthStencil.h"
-#include <atlbase.h>
 
 #include "ConstantBuffer/ConstantBuffer.h"
 
-#include "Camera/Camera.h"
+#include "Camera/TPSCamera.h"
 #include "Light/Light.h"
 
 // 管理クラス
@@ -230,10 +230,7 @@ bool GameBase::Run(HINSTANCE hIns)
 		return false;
 
 	// 投影データの設定
-	Camera::GetInstance()->SetFovAngle(60.0f);
-	Camera::GetInstance()->SetAspect(m_AspectRatio);
-	Camera::GetInstance()->SetNearFar(1.0f, 1000.0f);
-	Camera::GetInstance()->SetUp(Vector3::Up);
+	TPSCamera camera;
 
 	// FPS制御準備
 	MySleep sleep;
@@ -241,9 +238,6 @@ bool GameBase::Run(HINSTANCE hIns)
 
 	float angle	 = 0.0f;
 	float light  = 0.0f;
-	float cangle = 0.0f;
-	float ey	 = 0.0f;
-	float cl	 = 50.0f;
 
 	// 描画パターン
 	DRAW_PATTERN drawPattern = DRAW_PATTERN::Default;
@@ -328,22 +322,10 @@ bool GameBase::Run(HINSTANCE hIns)
 				debugDraw = !debugDraw;
 
 			// 光源の位置を設定
-			if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_A))
-				light += 0.01f;
-			else if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_D))
-				light -= 0.01f;
-
-			// カメラの位置を設定
-			if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_UP))
-				cl -= 1.0f;
-			else if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_DOWN))
-				cl += 1.0f;
-			cl = MathHelper::Clamp(cl, 10.0f, 150.0f);
-			// カメラ回転
-			if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_LEFT))
-				cangle += 0.2f;
-			else if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_RIGHT))
-				cangle -= 0.2f;
+			//if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_A))
+			//	light += 0.01f;
+			//else if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_D))
+			//	light -= 0.01f;
 		}
 
 		/* ポストエフェクトパラメータの操作 */
@@ -396,14 +378,8 @@ bool GameBase::Run(HINSTANCE hIns)
 
 		shadowMap.Update();
 
-		Vector3 eye		= Vector3(0.0f, 13.0f,  -cl);
-		Vector3 focus	= Vector3(0.0f, 13.0f, 0.0f);
-
-		auto eyePosMat = Matrix::CreateTranslation(eye) * Matrix::CreateRotationY(cangle);
-
-		// カメラ情報更新
-		Camera::GetInstance()->SetPosition(eyePosMat.Translation());
-		Camera::GetInstance()->SetTarget(focus);
+		// カメラ更新
+		camera.Update();
 
 		float deglight = MathHelper::ToDegrees(light);
 		Light::GetInstance()->SetPosition(Vector3(80.0f * MathHelper::Sin(deglight), 90.0f, -80.0f * MathHelper::Cos(deglight)));
@@ -441,7 +417,8 @@ bool GameBase::Run(HINSTANCE hIns)
 		// 光源情報反映
 		Light::GetInstance()->Draw();
 		// カメラ情報反映
-		Camera::GetInstance()->Draw();
+		//Camera::GetInstance()->SetShader();
+		camera.Draw();
 
 		/* モデルの描画 */
 		// 影データセット

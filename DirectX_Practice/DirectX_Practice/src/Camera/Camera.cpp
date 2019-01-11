@@ -19,7 +19,7 @@ Camera::~Camera()
 {
 }
 
-void Camera::Draw()
+void Camera::SetShader()
 {
 	ViewProjCB cb{
 		Matrix::Transpose(GetViewMatrix()),

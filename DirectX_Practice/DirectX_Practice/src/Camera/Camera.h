@@ -12,8 +12,8 @@ public:
 	friend class Singleton<Camera>;
 
 public:
-	// 描画（シェーダーにカメラ情報を送信）
-	void Draw();
+	// シェーダーにカメラ情報を送信
+	void SetShader();
 
 	// 位置を設定
 	void SetPosition(const Vector3& position);
@@ -49,7 +49,7 @@ protected:
 	// コンストラクタ
 	Camera();
 	// デストラクタ
-	~Camera();
+	virtual ~Camera();
 
 private:
 	Vector3			m_Position;		// カメラ座標
