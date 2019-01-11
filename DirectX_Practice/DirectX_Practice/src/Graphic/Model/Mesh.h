@@ -19,6 +19,7 @@ public:
 		Color 			emission;						// 自己照明カラー
 		float			shininess;						// 鏡面反射指数
 		CComPtr<ID3D11ShaderResourceView>	pTexture;	// テクスチャ
+		D3D11_CULL_MODE	cullMode;
 	};
 	// サブセット構造体
 	struct Subset

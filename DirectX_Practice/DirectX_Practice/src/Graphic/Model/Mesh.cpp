@@ -124,6 +124,8 @@ void Mesh::Load(const mmd::PMD::PMDFile & pmd, const std::string & folderPATH)
 		m_Materials[i].diffuse  = Color(diffuse.x, diffuse.y, diffuse.z, diffuse.w);
 		m_Materials[i].specular = Color(specular.x, specular.y, specular.z, pmd.mesh.materials[i].specularity);
 
+		m_Materials[i].cullMode = D3D11_CULL_MODE::D3D11_CULL_FRONT;
+
 		if (textures.count(textureName) > 0)
 			m_Materials[i].pTexture = ptextures.at(textures.at(textureName));
 		else
@@ -207,6 +209,10 @@ void Mesh::Load(const mmd::pmx::PMXFile & pmx, const std::string & folderPATH)
 		m_Materials[i].ambient  = Color(ambient.x, ambient.y, ambient.z, 0.0f);
 		m_Materials[i].diffuse  = Color(diffuse.x, diffuse.y, diffuse.z, diffuse.w);
 		m_Materials[i].specular = Color(specular.x, specular.y, specular.z, pmx.mesh.materials[i].specularity);
+
+		// —¼–Ê•`‰æ‚©”»’è
+		auto isCullNone = pmx.mesh.materials[i].flag & 0x01;
+		m_Materials[i].cullMode = isCullNone > 0 ? D3D11_CULL_MODE::D3D11_CULL_NONE : D3D11_CULL_MODE::D3D11_CULL_FRONT;
 
 		if (pmx.mesh.materials[i].texture_index >= 0)
 			m_Materials[i].pTexture = ptextures[pmx.mesh.materials[i].texture_index];
