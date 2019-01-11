@@ -50,6 +50,8 @@ namespace KEY_CODE
 	const UINT KEY_6 = DIK_6;
 	const UINT KEY_TAB = DIK_TAB;
 	const UINT KEY_ESC = DIK_ESCAPE;
+	const UINT KEY_PAGEUP	= DIK_PRIOR;
+	const UINT KEY_PAGEDOWN = DIK_NEXT;
 }
 
 class Keyboard : public Singleton<Keyboard>
