@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include "../Input/Keyboard.h"
 #include "../util/math/Vector3.h"
+#include "../Util.h"
 
 TPSCamera::TPSCamera()
 {
@@ -9,7 +10,7 @@ TPSCamera::TPSCamera()
 			  * Matrix::CreateTranslation(Vector3(0.0f, 10.0f, -50.0f));
 
 	Camera::GetInstance()->SetFovAngle(60.0f);
-	Camera::GetInstance()->SetAspect(1280.0f / 720.0f);
+	Camera::GetInstance()->SetAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT);
 	Camera::GetInstance()->SetNearFar(1.0f, 1000.0f);
 }
 
@@ -33,7 +34,7 @@ void TPSCamera::Update()
 	m_posture *= Matrix::CreateFromYawPitchRoll(yaw, pitch, roll);
 
 	// ˆÚ“®
-	float speed = 0.5f;
+	float speed = 0.3f;
 	if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_LEFT))
 		Translation(m_posture.Left() * speed);
 	else if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_RIGHT))

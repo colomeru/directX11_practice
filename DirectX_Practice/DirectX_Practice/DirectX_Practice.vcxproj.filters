@@ -201,6 +201,9 @@
     <ClInclude Include="src\Camera\TPSCamera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="src\Util.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\DefaultPixelShader.hlsl" />

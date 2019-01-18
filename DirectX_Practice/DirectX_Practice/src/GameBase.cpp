@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Input/Keyboard.h"
 #include "Timer/MySleep.h"
+#include "Util.h"
 
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
@@ -76,8 +77,8 @@ GameBase::GameBase() :
 	m_SwapChainCount(2),
 	m_SwapChainFormat(DXGI_FORMAT_R8G8B8A8_UNORM),
 	m_DepthStencilFormat(DXGI_FORMAT_D24_UNORM_S8_UINT),
-	m_Width(1280),
-	m_Height(720),
+	m_Width(WINDOW_WIDTH),
+	m_Height(WINDOW_HEIGHT),
 	m_AspectRatio((float)m_Width / (float)m_Height)
 {
 }
@@ -174,26 +175,26 @@ bool GameBase::Run(HINSTANCE hIns)
 
 	/* レンダーテクスチャ生成 */
 	// 通常用
-	RenderTexture rtDefault(&depthStencil);
-	rtDefault.Create(m_Width, m_Height);
+	RenderTexture rTexDefault(&depthStencil);
+	rTexDefault.Create(m_Width, m_Height);
 	// グレイスケール用
-	RenderTexture rtGrayScale(nullptr);
-	rtGrayScale.Create(m_Width, m_Height);
+	RenderTexture rTexGrayScale(nullptr);
+	rTexGrayScale.Create(m_Width, m_Height);
 	// 高輝度抽出用
-	RenderTexture rtBright(nullptr);
-	rtBright.Create(m_Width, m_Height);
+	RenderTexture rTexBright(nullptr);
+	rTexBright.Create(m_Width, m_Height);
 	// 水平方向ブラーシェーダー
-	RenderTexture rtBlurH(nullptr);
-	rtBlurH.Create(m_Width, m_Height);
+	RenderTexture rTexBlurH(nullptr);
+	rTexBlurH.Create(m_Width, m_Height);
 	// 垂直方向ブラーシェーダー
-	RenderTexture rtBlurVRT(nullptr);
-	rtBlurVRT.Create(m_Width, m_Height);
+	RenderTexture rTexBlurVRT(nullptr);
+	rTexBlurVRT.Create(m_Width, m_Height);
 	// ブルーム効果シェーダー
-	RenderTexture rtBloomCombine(nullptr);
-	rtBloomCombine.Create(m_Width, m_Height);
+	RenderTexture rTexBloomCombine(nullptr);
+	rTexBloomCombine.Create(m_Width, m_Height);
 	// アンチャーテッド２トゥーンマップシェーダー
-	RenderTexture rtUncharted2ToneMap(nullptr);
-	rtUncharted2ToneMap.Create(m_Width, m_Height);
+	RenderTexture rTexUncharted2ToneMap(nullptr);
+	rTexUncharted2ToneMap.Create(m_Width, m_Height);
 
 	// リソースの読み込み
 	LoadResources();
@@ -411,8 +412,8 @@ bool GameBase::Run(HINSTANCE hIns)
 		shadowMap.End(effectShadowMap);
 		
 		// 通常描画
-		rtDefault.Begin();
-		rtDefault.Clear();
+		rTexDefault.Begin();
+		rTexDefault.Clear();
 
 		// 光源情報反映
 		Light::GetInstance()->Draw();
@@ -452,19 +453,19 @@ bool GameBase::Run(HINSTANCE hIns)
 		effectMesh.End();
 
 		//shadowMap.Clear();
-		rtDefault.End();
+		rTexDefault.End();
 
 		/* ポストエフェクト開始 */
 		// グレイスケールで描画
 		if (drawPattern == DRAW_PATTERN::Monochrome)
 		{
-			rtGrayScale.Begin();
-			rtGrayScale.Clear();
+			rTexGrayScale.Begin();
+			rTexGrayScale.Clear();
 			effectGrayScale.Begin();
-			rtGrayScale.Set(rtDefault);
-			rtGrayScale.Draw();
+			rTexGrayScale.Set(rTexDefault);
+			rTexGrayScale.Draw();
 			effectShadow.End();
-			rtGrayScale.End();
+			rTexGrayScale.End();
 		}
 		else
 		{
@@ -484,53 +485,53 @@ bool GameBase::Run(HINSTANCE hIns)
 				}
 
 				// 高輝度抽出
-				rtBright.Begin();
-				rtBright.Clear();
+				rTexBright.Begin();
+				rTexBright.Clear();
 				effectBright.Begin();
-				rtBright.Set(rtDefault);
-				rtBright.Draw();
+				rTexBright.Set(rTexDefault);
+				rTexBright.Draw();
 				effectBright.End();
-				rtBright.End();
+				rTexBright.End();
 
 				// 水平方向ブラー
-				rtBlurH.Begin();
-				rtBlurH.Clear();
+				rTexBlurH.Begin();
+				rTexBlurH.Clear();
 				effectBlurH.Begin();
-				rtBlurH.Set(rtBright);
-				rtBlurH.Draw();
+				rTexBlurH.Set(rTexBright);
+				rTexBlurH.Draw();
 				effectBlurH.End();
-				rtBlurH.End();
+				rTexBlurH.End();
 
 				// 垂直方向ブラー
-				rtBlurVRT.Begin();
-				rtBlurVRT.Clear();
+				rTexBlurVRT.Begin();
+				rTexBlurVRT.Clear();
 				effectBlurV.Begin();
-				rtBlurVRT.Set(rtBlurH);
-				rtBlurVRT.Draw();
+				rTexBlurVRT.Set(rTexBlurH);
+				rTexBlurVRT.Draw();
 				effectBlurV.End();
-				rtBlurVRT.End();
+				rTexBlurVRT.End();
 
 				// 元画像とブラー画像を合成
-				rtBloomCombine.Begin();
-				rtBloomCombine.Clear();
+				rTexBloomCombine.Begin();
+				rTexBloomCombine.Clear();
 				effectBloomCombine.Begin();
-				rtBloomCombine.Set(rtDefault);
-				rtBloomCombine.Set(rtBlurVRT, 1);
-				rtBloomCombine.Draw();
+				rTexBloomCombine.Set(rTexDefault);
+				rTexBloomCombine.Set(rTexBlurVRT, 1);
+				rTexBloomCombine.Draw();
 				effectBloomCombine.End();
-				rtBloomCombine.End(1);
-				rtBloomCombine.End();
+				rTexBloomCombine.End(1);
+				rTexBloomCombine.End();
 
 				if (drawPattern == DRAW_PATTERN::Uncharted2)
 				{
 					// アンチャーテッド２トゥーンマップ
-					rtUncharted2ToneMap.Begin();
-					rtUncharted2ToneMap.Clear();
+					rTexUncharted2ToneMap.Begin();
+					rTexUncharted2ToneMap.Clear();
 					effectUncharted2ToneMap.Begin();
-					rtUncharted2ToneMap.Set(rtBloomCombine);
-					rtUncharted2ToneMap.Draw();
+					rTexUncharted2ToneMap.Set(rTexBloomCombine);
+					rTexUncharted2ToneMap.Draw();
 					effectUncharted2ToneMap.End();
-					rtUncharted2ToneMap.End();
+					rTexUncharted2ToneMap.End();
 				}
 			}
 		}
@@ -539,18 +540,18 @@ bool GameBase::Run(HINSTANCE hIns)
 		// 描画情報セット
 		switch (drawPattern)
 		{
-		case DRAW_PATTERN::Default:	   SpriteManager::GetInstance()->DrawGraph(Vector2::Zero, rtDefault); break;
-		case DRAW_PATTERN::Monochrome: SpriteManager::GetInstance()->DrawGraph(Vector2::Zero, rtGrayScale);	break;
+		case DRAW_PATTERN::Default:	   SpriteManager::GetInstance()->DrawGraph(Vector2::Zero, rTexDefault); break;
+		case DRAW_PATTERN::Monochrome: SpriteManager::GetInstance()->DrawGraph(Vector2::Zero, rTexGrayScale);	break;
 		case DRAW_PATTERN::Bloom:
 		{
 			//SpriteManager::GetInstance()->DrawGraph(Vector2::Zero, effectBloomCombineRT); break;
-			SpriteManager::GetInstance()->DrawGraph(Vector2::Zero, rtBright.GetShaderResource(), rtBright.GetWidth() / 2, rtBright.GetHeight() / 2);
-			SpriteManager::GetInstance()->DrawGraph(Vector2(0, m_Height / 2), rtBloomCombine.GetShaderResource(), rtBloomCombine.GetWidth() / 2, rtBloomCombine.GetHeight() / 2);
-			SpriteManager::GetInstance()->DrawGraph(Vector2(m_Width / 2, 0), rtBlurH.GetShaderResource(), rtBlurH.GetWidth() / 2, rtBlurH.GetHeight() / 2); 
-			SpriteManager::GetInstance()->DrawGraph(Vector2(m_Width / 2, m_Height / 2), rtBlurVRT.GetShaderResource(), rtBlurVRT.GetWidth() / 2, rtBlurVRT.GetHeight() / 2);
+			SpriteManager::GetInstance()->DrawGraph(Vector2::Zero, rTexBright.GetShaderResource(), rTexBright.GetWidth() / 2, rTexBright.GetHeight() / 2);
+			SpriteManager::GetInstance()->DrawGraph(Vector2(0, m_Height / 2), rTexBloomCombine.GetShaderResource(), rTexBloomCombine.GetWidth() / 2, rTexBloomCombine.GetHeight() / 2);
+			SpriteManager::GetInstance()->DrawGraph(Vector2(m_Width / 2, 0), rTexBlurH.GetShaderResource(), rTexBlurH.GetWidth() / 2, rTexBlurH.GetHeight() / 2); 
+			SpriteManager::GetInstance()->DrawGraph(Vector2(m_Width / 2, m_Height / 2), rTexBlurVRT.GetShaderResource(), rTexBlurVRT.GetWidth() / 2, rTexBlurVRT.GetHeight() / 2);
 			break;
 		}
-		case DRAW_PATTERN::Uncharted2: SpriteManager::GetInstance()->DrawGraph(Vector2::Zero, rtUncharted2ToneMap);	break;
+		case DRAW_PATTERN::Uncharted2: SpriteManager::GetInstance()->DrawGraph(Vector2::Zero, rTexUncharted2ToneMap);	break;
 		default: break;
 		}
 

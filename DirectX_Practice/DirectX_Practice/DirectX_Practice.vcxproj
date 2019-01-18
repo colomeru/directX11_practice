@@ -212,6 +212,7 @@
     <ClInclude Include="src\ShadowMap.h" />
     <ClInclude Include="src\SphereModel.h" />
     <ClInclude Include="src\Timer\MySleep.h" />
+    <ClInclude Include="src\Util.h" />
     <ClInclude Include="src\util\math\Color.h" />
     <ClInclude Include="src\util\math\MathHelper.h" />
     <ClInclude Include="src\util\math\Matrix.h" />
