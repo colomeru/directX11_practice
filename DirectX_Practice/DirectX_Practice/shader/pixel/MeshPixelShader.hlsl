@@ -68,6 +68,6 @@ float4 main(PS_INPUT input) : SV_TARGET
 
 	float4 OutputColor;
 	OutputColor.rgb = saturate(AmbientColor + DiffuseColor + SpecularColor);
-	OutputColor.a = baseColor.a;
+	OutputColor.a = u_diffuse.a;
 	return OutputColor;
 }
