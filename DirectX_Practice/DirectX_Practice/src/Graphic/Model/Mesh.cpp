@@ -73,7 +73,10 @@ void Mesh::Load(const mmd::PMD::PMDFile & pmd, const std::string & folderPATH)
 
 			HRESULT hr = DirectX::CreateWICTextureFromFile(DirectX11::GetInstance()->GetDevice(), wc, &pRes, &pTextureView);
 			if (FAILED(hr))
+			{
 				MessageBox(NULL, _T("Texture_Load_Error"), _T(texNameStr.c_str()), MB_OK);
+				return;
+			}
 
 			// インデックスの登録
 			textures[texNameStr] = textures.size();
@@ -165,7 +168,10 @@ void Mesh::Load(const mmd::pmx::PMXFile & pmx, const std::string & folderPATH)
 
 		HRESULT hr = DirectX::CreateWICTextureFromFile(DirectX11::GetInstance()->GetDevice(), wc, &pTexture, &pTextureView);
 		if (FAILED(hr))
+		{
 			MessageBox(NULL, _T("Texture_Load_Error"), _T(str.c_str()), MB_OK);
+			return;
+		}
 
 		textures[i] = pTextureView;
 		ptextures[ptextures.size()] = pTextureView;

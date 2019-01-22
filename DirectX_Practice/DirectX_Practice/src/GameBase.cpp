@@ -419,12 +419,13 @@ bool GameBase::Run(HINSTANCE hIns)
 		Light::GetInstance()->Draw();
 		// カメラ情報反映
 		//Camera::GetInstance()->SetShader();
-		camera.Draw();
+		//camera.Draw();
 
 		/* モデルの描画 */
 		// 影データセット
 		shadowMap.Set();
 		MeshShader shadowShader(effectShadow);
+		camera.Draw();
 		stage->Draw(shadowShader, Matrix::Identity);
 		shadowMap.Clear();
 
@@ -434,12 +435,16 @@ bool GameBase::Run(HINSTANCE hIns)
 		switch (drawModel)
 		{
 		case DRAW_MODEL::Mirai_Akari:
+			camera.Draw();
 			mirai_akari->Draw(meshShader, worldMatrix); break;
 		case DRAW_MODEL::Siro:
+			camera.Draw();
 			siro->Draw(meshShader, worldMatrix); break;
 		case DRAW_MODEL::Kouhai_chan:
+			camera.Draw();
 			kouhai_chan->Draw(meshShader, worldMatrix); break;
 		case DRAW_MODEL::Ichigo:	
+			camera.Draw();
 			ichigo->Draw(meshShader, worldMatrix);	break;
 		default: 
 			break;

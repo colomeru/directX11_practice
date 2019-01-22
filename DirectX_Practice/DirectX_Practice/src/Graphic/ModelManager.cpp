@@ -1,6 +1,12 @@
 #include "ModelManager.h"
 #include "Model.h"
 
+#include <thread>
+#include <future>
+#include <mutex>
+
+std::mutex isLoadedMutex;
+
 ModelManager::ModelManager()
 {
 	Clear();
@@ -41,8 +47,13 @@ bool ModelManager::Load(const std::string & fileName, const MODEL_ID& id)
 		mmd::pmx::PMXFileReader(pmx).read(PATH + fileName);
 
 		//
+		//std::lock_guard<std::mutex>  lock(isLoadedMutex);
+		//std::thread th([&]() { model->mesh.Load(pmx, PATH + folder); });
+		//auto result = std::async(std::launch::async, [&]() { model->mesh.Load(pmx, PATH + folder); });
 		model->mesh.Load(pmx, PATH + folder);
 		model->skeleton.Load(pmx);
+		//th.join();
+		//result.wait();
 	}
 
 	// マップにモデルデータを登録
