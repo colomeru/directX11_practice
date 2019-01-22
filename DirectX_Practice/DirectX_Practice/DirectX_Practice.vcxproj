@@ -162,7 +162,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera\Camera.h" />
-    <ClInclude Include="src\Camera\TPSCamera.h" />
+    <ClInclude Include="src\Camera\FreeCamera.h" />
     <ClInclude Include="src\ConstantBuffer\ConstantBuffer.h" />
     <ClInclude Include="src\DirectX\DepthStencil.h" />
     <ClInclude Include="src\DirectX\DirectX11.h" />
@@ -430,7 +430,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Camera\Camera.cpp" />
-    <ClCompile Include="src\Camera\TPSCamera.cpp" />
+    <ClCompile Include="src\Camera\FreeCamera.cpp" />
     <ClCompile Include="src\DirectX\DepthStencil.cpp" />
     <ClCompile Include="src\DirectX\DirectX11.cpp" />
     <ClCompile Include="src\DirectX\ShaderResource.cpp" />

@@ -35,8 +35,6 @@ public:
 
 	// バッファ生成
 	bool CreateBuffer(ID3D11Buffer** ppBuffer, void* resources, size_t size, D3D11_BIND_FLAG bindFlag);
-	// バッファの生成
-	//bool CreateBuffer(ID3D11Buffer** ppBuffer, void* resources, size_t size, BufferType type);
 	// ビューポートの作成
 	void CreateViewPort();
 

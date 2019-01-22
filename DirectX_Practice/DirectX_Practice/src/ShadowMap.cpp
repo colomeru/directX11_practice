@@ -122,7 +122,7 @@ void ShadowMap::Begin(Effect& effect)
 
 	ViewProjCB cb{
 		Matrix::Transpose(Light::GetInstance()->GetViewMatrix()),
-		Matrix::Transpose(Matrix::CreatePerspectiveFieldOfView(60.0f, 1.0f, 0.1f, 5000.0f))
+		Matrix::Transpose(Matrix::CreatePerspectiveFieldOfView(60.0f, 1.0f, 0.1f, 1000.0f))
 	};
 
 	DirectX11::GetInstance()->GetContext()->UpdateSubresource(m_pConstantBuffer, 0, nullptr, &cb, 0, 0);
@@ -153,7 +153,7 @@ void ShadowMap::Set()
 		0.5f,  0.5f, 0.0f, 1.0f
 	};
 	
-	auto viewproj = Light::GetInstance()->GetViewMatrix() * Matrix::CreatePerspectiveFieldOfView(60.0f, 1, 0.1f, 5000.0f);
+	auto viewproj = Light::GetInstance()->GetViewMatrix() * Matrix::CreatePerspectiveFieldOfView(60.0f, 1, 0.1f, 1000.0f);
 
 	/* シャドウマップデータのセット */
 	ShadowCB shadowCB{

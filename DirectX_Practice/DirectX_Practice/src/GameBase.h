@@ -17,8 +17,6 @@ private:
 	void LoadResources();
 
 private:
-	D3D_DRIVER_TYPE				m_DriverType;				// ドライバータイプ
-	D3D_FEATURE_LEVEL			m_FeatureLevel;				// 機能レベル
 	UINT						m_MultiSampleCount;			// マルチサンプルのカウント
 	UINT						m_MultiSampleQuality;		// マルチサンプルの品質
 	UINT						m_MultiSampleMaxQuality;	// マルチサンプルの最大品質

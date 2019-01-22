@@ -15,7 +15,7 @@
 
 #include "ConstantBuffer/ConstantBuffer.h"
 
-#include "Camera/TPSCamera.h"
+#include "Camera/FreeCamera.h"
 #include "Light/Light.h"
 
 // 管理クラス
@@ -231,7 +231,7 @@ bool GameBase::Run(HINSTANCE hIns)
 		return false;
 
 	// 投影データの設定
-	TPSCamera camera;
+	FreeCamera camera;
 
 	// FPS制御準備
 	MySleep sleep;
@@ -377,7 +377,7 @@ bool GameBase::Run(HINSTANCE hIns)
 			}
 		}
 
-		shadowMap.Update();
+		//shadowMap.Update();
 
 		// カメラ更新
 		camera.Update();
@@ -445,14 +445,14 @@ bool GameBase::Run(HINSTANCE hIns)
 			break;
 		}
 
-		DirectX11::GetInstance()->SetRasterizer(D3D11_FILL_SOLID, D3D11_CULL_NONE);
-		effectMesh.Begin();
-		auto sprite = SpriteManager::GetInstance()->Get(SPRITE_ID::SKY_SPRITE);
-		sprite->Begin();
-		sphere.Draw();
-		effectMesh.End();
+		//DirectX11::GetInstance()->SetRasterizer(D3D11_FILL_SOLID, D3D11_CULL_NONE);
+		//effectMesh.Begin();
+		//auto sprite = SpriteManager::GetInstance()->Get(SPRITE_ID::SKY_SPRITE);
+		//sprite->Begin();
+		//sphere.Draw();
+		//effectMesh.End();
 
-		//shadowMap.Clear();
+		shadowMap.Clear();
 		rTexDefault.End();
 
 		/* ポストエフェクト開始 */
@@ -556,7 +556,7 @@ bool GameBase::Run(HINSTANCE hIns)
 		}
 
 		// FPS描画
-		FontManager::GetInstance()->Draw(Vector2(10.0f, 10.0f), MyUtil::toString("FPS : %.1f", sleep.fps));
+		//FontManager::GetInstance()->Draw(Vector2(10.0f, 10.0f), MyUtil::toString("FPS : %.1f", sleep.fps));
 
 		// パラメータ描画
 		if (debugDraw)
@@ -576,7 +576,7 @@ bool GameBase::Run(HINSTANCE hIns)
 		}
 		else
 		{
-			FontManager::GetInstance()->Draw(Vector2(10.0f, 30.0f), MyUtil::toString("DebugText : SPACE"));
+			//FontManager::GetInstance()->Draw(Vector2(10.0f, 30.0f), MyUtil::toString("DebugText : SPACE"));
 		}
 		
 		//SpriteManager::GetInstance()->DrawGraph(Vector2(100, 100), FontManager::GetInstance()->GetDebugFont().GetRenderTexture());
@@ -584,11 +584,11 @@ bool GameBase::Run(HINSTANCE hIns)
 		//shadowMap.DebugDraw();
 		//SpriteManager::GetInstance()->Draw(SPRITE_ID::TEST_SPRITE, Vector2(100, 100));
 
-		// FPS制御
-		sleep.Wait();
-
 		// 画面の更新
 		DirectX11::GetInstance()->GetSwapChain()->Present(0, 0);
+
+		// FPS制御
+		sleep.Wait();
 	}
 
 	ModelManager::GetInstance()->Clear();
@@ -627,7 +627,7 @@ void GameBase::LoadResources()
 
 	// スプライトの読み込み
 	SpriteManager::GetInstance()->Initialize(m_Width, m_Height);
-	//SpriteManager::GetInstance()->Load("numakuro.png", SPRITE_ID::TEST_SPRITE);
+	SpriteManager::GetInstance()->Load("numakuro.png", SPRITE_ID::TEST_SPRITE);
 	SpriteManager::GetInstance()->Load("yuingo.jpg", SPRITE_ID::TEST_SPRITE);
 	SpriteManager::GetInstance()->Load("sky.png", SPRITE_ID::SKY_SPRITE);
 }

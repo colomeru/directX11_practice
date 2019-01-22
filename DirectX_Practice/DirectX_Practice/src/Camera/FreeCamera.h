@@ -3,13 +3,13 @@
 
 struct Vector3;
 
-class TPSCamera
+class FreeCamera
 {
 public:
 	// コンストラクタ
-	TPSCamera();
+	FreeCamera();
 	// デストラクタ
-	~TPSCamera();
+	~FreeCamera();
 	// 更新
 	void Update();
 	// 描画

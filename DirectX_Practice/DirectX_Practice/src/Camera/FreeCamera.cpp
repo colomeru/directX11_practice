@@ -1,24 +1,24 @@
-#include "TPSCamera.h"
+#include "FreeCamera.h"
 #include "Camera.h"
 #include "../Input/Keyboard.h"
 #include "../util/math/Vector3.h"
 #include "../Util.h"
 
-TPSCamera::TPSCamera()
+FreeCamera::FreeCamera()
 {
 	m_posture = Matrix::CreateRotationY(180.0f)
 			  * Matrix::CreateTranslation(Vector3(0.0f, 10.0f, -50.0f));
 
 	Camera::GetInstance()->SetFovAngle(60.0f);
 	Camera::GetInstance()->SetAspect((float)WINDOW_WIDTH / (float)WINDOW_HEIGHT);
-	Camera::GetInstance()->SetNearFar(1.0f, 1000.0f);
+	Camera::GetInstance()->SetNearFar(0.1f, 500.0f);
 }
 
-TPSCamera::~TPSCamera()
+FreeCamera::~FreeCamera()
 {
 }
 
-void TPSCamera::Update()
+void FreeCamera::Update()
 {
 	// ‰ñ“]
 	float yaw, pitch, roll;
@@ -56,12 +56,12 @@ void TPSCamera::Update()
 	Camera::GetInstance()->SetUp(m_posture.Up());
 }
 
-void TPSCamera::Draw() const
+void FreeCamera::Draw() const
 {
 	Camera::GetInstance()->SetShader();
 }
 
-void TPSCamera::Translation(const Vector3 & v)
+void FreeCamera::Translation(const Vector3 & v)
 {
 	m_posture *= Matrix::CreateTranslation(v);
 }
