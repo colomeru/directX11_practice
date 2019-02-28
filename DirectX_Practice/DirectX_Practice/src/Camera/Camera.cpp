@@ -1,6 +1,4 @@
 #include "Camera.h"
-#include "../ConstantBuffer/ConstantBuffer.h"
-#include "../DirectX/DirectX11.h"
 
 Camera::Camera() :
 	m_Position({ 0.0f, 0.0f, 0.0f }),
@@ -9,24 +7,12 @@ Camera::Camera() :
 	m_Fov(0.0f),
 	m_Aspect(0.0f),
 	m_NearZ(0.1f),
-	m_FarZ(100.0f),
-	m_pConstantBuffer(nullptr)
+	m_FarZ(100.0f)
 {
-	DirectX11::GetInstance()->CreateBuffer(&m_pConstantBuffer, nullptr, sizeof(ViewProjCB), D3D11_BIND_CONSTANT_BUFFER);
 }
 
 Camera::~Camera()
 {
-}
-
-void Camera::SetShader()
-{
-	ViewProjCB cb{
-		Matrix::Transpose(GetViewMatrix()),
-		Matrix::Transpose(GetProjectionMatrix())
-	};
-	DirectX11::GetInstance()->GetContext()->UpdateSubresource(m_pConstantBuffer, 0, NULL, &cb, 0, 0);
-	DirectX11::GetInstance()->GetContext()->VSSetConstantBuffers(0, 1, &m_pConstantBuffer.p);
 }
 
 void Camera::SetPosition(const Vector3 & position)

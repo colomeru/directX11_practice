@@ -204,6 +204,15 @@
     <ClInclude Include="src\Camera\FreeCamera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="src\Graphic\Model\mesh\SkinnedMesh.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shader\SkinnedMeshShader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shader\vertex\SkinnedMeshVertexShader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\DefaultPixelShader.hlsl" />
@@ -222,6 +231,7 @@
     <FxCompile Include="shader\pixel\ShadowPixelShader.hlsl" />
     <FxCompile Include="shader\vertex\MeshVertexShader.hlsl" />
     <FxCompile Include="shader\pixel\MeshPixelShader.hlsl" />
+    <FxCompile Include="shader\vertex\SkinnedMeshVertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GameBase.cpp">
@@ -372,6 +382,15 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\Camera\FreeCamera.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphic\Model\mesh\SkinnedMesh.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\SkinnedMeshShader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\vertex\SkinnedMeshVertexShader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

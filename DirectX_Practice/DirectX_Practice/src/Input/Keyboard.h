@@ -48,6 +48,10 @@ namespace KEY_CODE
 	const UINT KEY_4 = DIK_4;
 	const UINT KEY_5 = DIK_5;
 	const UINT KEY_6 = DIK_6;
+	const UINT KEY_7 = DIK_7;
+	const UINT KEY_8 = DIK_8;
+	const UINT KEY_9 = DIK_9;
+	const UINT KEY_0 = DIK_0;
 	const UINT KEY_TAB = DIK_TAB;
 	const UINT KEY_ESC = DIK_ESCAPE;
 	const UINT KEY_PAGEUP	= DIK_PRIOR;

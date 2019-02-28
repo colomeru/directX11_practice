@@ -11,7 +11,9 @@
 
 CharacterManager::CharacterManager() :
 	m_FontSize(0),
-	m_FontTexture(nullptr)
+	m_FontTexture(nullptr),
+	m_RowCount(0),
+	m_ColCount(0)
 {
 	m_FontMap.clear();
 	DirectX11::GetInstance()->CreateBuffer(&m_pConstantBuffer, nullptr, sizeof(UV_CB), D3D11_BIND_CONSTANT_BUFFER);

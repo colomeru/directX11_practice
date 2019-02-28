@@ -33,10 +33,9 @@ Texture* CharacterTexture::Create(const std::string& fontName, TCHAR* c, int fon
 	};
 
 	HFONT hFont = CreateFontIndirect(&lf);
+	// 失敗
 	if (!(hFont))
-	{
-		// 失敗
-	}
+		return nullptr;
 
 	// デバイスコンテキスト取得
 	// デバイスにフォントを持たせないとGetGlyphOutline関数はエラーとなる
@@ -104,6 +103,9 @@ Texture* CharacterTexture::Create(const std::string& fontName, TCHAR* c, int fon
 		0,
 		&hMappedResource);
 	//ASSERT_HR("テクスチャマップ失敗", hr);
+	if (FAILED(hr))
+		return nullptr;
+
 	// ここで書き込む
 	BYTE* pBits = (BYTE*)hMappedResource.pData;
 

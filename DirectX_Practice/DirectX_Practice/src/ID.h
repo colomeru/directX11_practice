@@ -16,6 +16,8 @@ enum class MODEL_ID
 	MIRAI_AKARI_MODEL,	// アカリモデル
 	KOUHAI_CHAN_MODEL,	// 後輩ちゃんモデル
 	ICHIGO_MODEL,		// 宇志海いちごモデル
+	ALICE_MODEL,		// アリスモデル
+	SOLDIER_MODEL,		// ソルジャーモデル
 	STAGE_MODEL,		// ステージ
 };
 
@@ -26,6 +28,7 @@ enum class VERTEX_SHADER_ID
 	MESH_SHADER,
 	SHADOW_MESH_SHADER,
 	SHADOW_SHADER,
+	SKINNED_MESH_SHADER,
 	TEXTURE_SHADER,
 	FONT_SHADER,
 };

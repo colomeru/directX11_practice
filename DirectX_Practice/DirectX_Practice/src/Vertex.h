@@ -10,6 +10,10 @@ struct Vertex
 	Vector3	Normal;
 	//Color	Color;
 	Vector2	Texcoord;
+	float	BoneIndices[4];
+	float	BoneWeights[4];
+	Vector3	Tangent;
+	Vector3	Binormal;
 };
 
 struct TextureVertex
@@ -27,12 +31,4 @@ struct ShadowVertex
 {
 	Vector3 Position;
 };
-
-struct SkineedVertex
-{
-	Vector3 Position;
-	Vector3 Normal;
-	Vector2	Texcoord;
-	Matrix  BoneIndices;
-	Matrix  BoneWeight;
-};
+;

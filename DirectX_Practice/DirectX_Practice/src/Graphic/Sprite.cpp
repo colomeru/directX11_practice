@@ -90,6 +90,8 @@ bool Sprite::Create(const std::string & filePath)
 
 	// サンプラステートの生成
 	hr = DirectX11::GetInstance()->GetDevice()->CreateSamplerState(&smpDesc, &m_Res.pSampler.p);
+	if (FAILED(hr))
+		return false;
 
 	return true;
 }
@@ -127,8 +129,10 @@ bool Sprite::Create(const Texture * pTexture)
 	smpDesc.MaxLOD			= D3D11_FLOAT32_MAX;
 
 	hr = DirectX11::GetInstance()->GetDevice()->CreateSamplerState(&smpDesc, &m_Res.pSampler.p);
+	if (FAILED(hr))
+		return false;
 
-	return SUCCEEDED(hr);
+	return true;
 }
 
 unsigned int Sprite::GetWidth() const

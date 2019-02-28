@@ -18,7 +18,6 @@
 #include "Camera/FreeCamera.h"
 #include "Light/Light.h"
 
-// ä«óùÉNÉâÉX
 #include "Shader/ShaderManager.h"
 #include "Graphic/SpriteManager.h"
 #include "Graphic/Sprite.h"
@@ -35,13 +34,13 @@
 #include "util/math/Vector2.h"
 #include "util/MyUtil.h"
 
-// í∏ì_ÉVÉFÅ[É_Å[
 #include "Shader/vertex/MeshVertexShader.h"
 #include "Shader/vertex/ShadowMeshVertexShader.h"
+#include "Shader/vertex/SkinnedMeshVertexShader.h"
 #include "Shader/vertex/ShadowMapVertexShader.h"
 #include "Shader/vertex/TextureVertexShader.h"
 #include "Shader/vertex/FontVertexShader.h"
-// ÉsÉNÉZÉãÉVÉFÅ[É_
+
 #include "Shader/pixel/MeshPixelShader.h"
 #include "Shader/pixel/ShadowMeshPixelShader.h"
 #include "Shader/pixel/TexturePixelShader.h"
@@ -49,8 +48,11 @@
 
 #include "Shader/MeshShader.h"
 #include "Shader/ShadowMapShader.h"
+#include "Shader/SkinnedMeshShader.h"
 
 #include "SphereModel.h"
+
+#include "Graphic\Model\Animation.h"
 
 enum class DRAW_PATTERN
 {
@@ -67,7 +69,8 @@ enum class DRAW_MODEL
 	Siro		= 2,
 	Kouhai_chan = 3,
 	Ichigo		= 4,
-	MAX			= 5,
+	Soldier		= 5,
+	MAX			= 6,
 };
 
 GameBase::GameBase() :
@@ -91,40 +94,35 @@ bool GameBase::Run(HINSTANCE hIns)
 {
 	HRESULT hr;
 
-	// ÉEÉBÉìÉhÉEÇÃçÏê¨
 	Window::GetInstance()->Create("DirectX11_Practice", m_Width, m_Height);
 
-	// èâä˙âª
 	if (!DirectX11::GetInstance()->Initialize())
 		return false;
 
-	// DirectInputèâä˙âª
+	// DirectInputÁîüÊàê
 	LPDIRECTINPUT8 dInput;
 	hr = DirectInput8Create(hIns, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&dInput, NULL);
 	if (!SUCCEEDED(hr))
 		return false;
 
-	// ì¸óÕä÷åWèâä˙âª
 	Keyboard::GetInstance()->Initialize(Window::GetInstance()->GetHandle(), dInput);
 
-	// É}ÉãÉ`ÉTÉìÉvÉãÇÃç≈ëÂïiéøÇéÊìæ
 	hr = DirectX11::GetInstance()->GetDevice()->CheckMultisampleQualityLevels(m_SwapChainFormat, m_MultiSampleCount, &m_MultiSampleMaxQuality);
 	if (FAILED(hr))
 		return false;
 
-	// ÉåÉìÉ_Å[É^Å[ÉQÉbÉgÇÃê∂ê¨
-	Texture backBuffer;
-	backBuffer.Create();
-	RenderTarget renderTarget;
-	renderTarget.Create(&backBuffer);
+	// „Éê„ÉÉ„ÇØ„Éê„ÉÉ„Éï„Ç°„ÅÆÁîüÊàê
+	Texture backBufferTex;
+	backBufferTex.Create();
+	RenderTarget backBuffer;
+	backBuffer.Create(&backBufferTex);
 
-	// ï`âÊêÊÇó†âÊñ Ç…Ç∑ÇÈ
-	DirectX11::GetInstance()->SetRenderTarget(&renderTarget, nullptr);
+	DirectX11::GetInstance()->SetRenderTarget(&backBuffer, nullptr);
 
 	DXGI_FORMAT textureFormat  = DXGI_FORMAT_R8G8B8A8_UNORM;
 	DXGI_FORMAT resourceFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 
-	// ÉeÉNÉXÉ`ÉÉÇ∆ÉVÉFÅ[É_Å[ÉäÉ\Å[ÉXÉrÉÖÅ[ÇÃÉtÉHÅ[É}ÉbÉgÇìKêÿÇ»Ç‡ÇÃÇ…ïœçX
+	// Ê∑±Â∫¶„Çπ„ÉÜ„É≥„Ç∑„É´„ÅÆ„ÇØ„Ç™„É™„ÉÜ„Ç£Â§âÊõ¥
 	switch (m_DepthStencilFormat)
 	{
 	case DXGI_FORMAT_D16_UNORM:
@@ -155,8 +153,8 @@ bool GameBase::Run(HINSTANCE hIns)
 
 	D3D11_TEXTURE2D_DESC textureDesc;
 	ZeroMemory(&textureDesc, sizeof(D3D11_TEXTURE2D_DESC));
-	textureDesc.Width		= m_Width;	// ÉoÉbÉNÉoÉbÉtÉ@Å[Ç∆ìØÇ∂ÉTÉCÉYÇéwíË
-	textureDesc.Height		= m_Height;	// ÉoÉbÉNÉoÉbÉtÉ@Å[Ç∆ìØÇ∂ÉTÉCÉYÇéwíË
+	textureDesc.Width		= m_Width;	// „Çπ„ÇØ„É™„Éº„É≥Ê®™ÂπÖ
+	textureDesc.Height		= m_Height;	// „Çπ„ÇØ„É™„Éº„É≥Á∏¶ÂπÖ
 	textureDesc.Format		= textureFormat;
 	textureDesc.Usage		= D3D11_USAGE_DEFAULT;
 	textureDesc.BindFlags	= D3D11_BIND_DEPTH_STENCIL;
@@ -167,80 +165,71 @@ bool GameBase::Run(HINSTANCE hIns)
 	textureDesc.SampleDesc.Count	= 1;
 	textureDesc.SampleDesc.Quality	= 0;
 
-	// ÉfÉvÉXÉXÉeÉìÉVÉãÇÃê∂ê¨
+	// Ê∑±Â∫¶„Çπ„ÉÜ„É≥„Ç∑„É´„ÅÆÁîüÊàê
 	Texture depthTexture;
 	depthTexture.Create(textureDesc);
 	DepthStencil depthStencil;
 	depthStencil.Create(&depthTexture, textureDesc.Format);
 
-	/* ÉåÉìÉ_Å[ÉeÉNÉXÉ`ÉÉê∂ê¨ */
-	// í èÌóp
+	/* „Éù„Çπ„Éà„Ç®„Éï„Çß„ÇØ„ÉàÁî®„É¨„É≥„ÉÄ„Éº„ÉÜ„ÇØ„Çπ„ÉÅ„É£ÁîüÊàê */
+	// ÂàùÊúü„É¨„É≥„ÉÄ„Éº„Çø„Éº„Ç≤„ÉÉ„Éà
 	RenderTexture rTexDefault(&depthStencil);
 	rTexDefault.Create(m_Width, m_Height);
-	// ÉOÉåÉCÉXÉPÅ[Éãóp
 	RenderTexture rTexGrayScale(nullptr);
 	rTexGrayScale.Create(m_Width, m_Height);
-	// çÇãPìxíäèoóp
 	RenderTexture rTexBright(nullptr);
 	rTexBright.Create(m_Width, m_Height);
-	// êÖïΩï˚å¸ÉuÉâÅ[ÉVÉFÅ[É_Å[
 	RenderTexture rTexBlurH(nullptr);
 	rTexBlurH.Create(m_Width, m_Height);
-	// êÇíºï˚å¸ÉuÉâÅ[ÉVÉFÅ[É_Å[
 	RenderTexture rTexBlurVRT(nullptr);
 	rTexBlurVRT.Create(m_Width, m_Height);
-	// ÉuÉãÅ[ÉÄå¯â ÉVÉFÅ[É_Å[
 	RenderTexture rTexBloomCombine(nullptr);
 	rTexBloomCombine.Create(m_Width, m_Height);
-	// ÉAÉìÉ`ÉÉÅ[ÉeÉbÉhÇQÉgÉDÅ[ÉìÉ}ÉbÉvÉVÉFÅ[É_Å[
 	RenderTexture rTexUncharted2ToneMap(nullptr);
 	rTexUncharted2ToneMap.Create(m_Width, m_Height);
 
-	// ÉäÉ\Å[ÉXÇÃì«Ç›çûÇ›
+	// „É™„ÇΩ„Éº„ÇπË™≠„ÅøËæº„Åø
 	LoadResources();
 
-	// É~ÉâÉCÉAÉJÉä
+	// „Éü„É©„Ç§„Ç¢„Ç´„É™„É¢„Éá„É´
 	auto mirai_akari = ModelManager::GetInstance()->Get(MODEL_ID::MIRAI_AKARI_MODEL);
-	// ëæÇ‡Ç‡Ç…ÉAÉãÉtÉ@ÉuÉåÉìÉhÇ™ïKóvÇ»ÇΩÇﬂ
 	mirai_akari->SetAlphaBlend(true, true);
-	// ÉVÉç
+	// ÈõªËÑ≥Â∞ëÂ•≥„Ç∑„É≠„É¢„Éá„É´
 	auto siro = ModelManager::GetInstance()->Get(MODEL_ID::SIRO_MODEL);
-	// ÇÕÇ≤ÇÎÇ‡ÉtÅ[ÉY
 	siro->SetAlphaBlend(true, false);
-	// å„îyÇøÇ·ÇÒ
+	// ÂæåËº©„Å°„ÇÉ„Çì„É¢„Éá„É´
 	auto kouhai_chan = ModelManager::GetInstance()->Get(MODEL_ID::KOUHAI_CHAN_MODEL);
 	kouhai_chan->SetAlphaBlend(true, false);
-	// Ç¢ÇøÇ≤
+	// „ÅÑ„Å°„Åî„Å°„ÇÉ„Çì„É¢„Éá„É´
 	auto ichigo = ModelManager::GetInstance()->Get(MODEL_ID::ICHIGO_MODEL);
-	// äz
 	ichigo->SetAlphaBlend(true, false);
-	// ÉXÉeÅ[ÉW
+	// „Ç¢„É™„Çπ„É¢„Éá„É´
+	auto soldier = ModelManager::GetInstance()->Get(MODEL_ID::SOLDIER_MODEL);
+	soldier->SetAlphaBlend(true, false);
+	// „Çπ„ÉÜ„Éº„Ç∏„É¢„Éá„É´
 	auto stage = ModelManager::GetInstance()->Get(MODEL_ID::STAGE_MODEL);
 
-	// íËêîÉoÉbÉtÉ@ÇÃê›íË
+	// „Éù„Çπ„Éà„Ç®„Éï„Çß„ÇØ„ÉàÁî®„Éê„ÉÉ„Éï„Ç°
 	CComPtr<ID3D11Buffer> pBloomBuffer;
 	DirectX11::GetInstance()->CreateBuffer(&pBloomBuffer, nullptr, sizeof(BloomCB), D3D11_BIND_CONSTANT_BUFFER);
 
-	// ÉVÉÉÉhÉEÉ}ÉbÉvópÇÃÉeÉNÉXÉ`ÉÉÇÃê›íË
-	int  index  = 11;
-	UINT smSize = MathHelper::Pow(2, index);
+	// „Ç∑„É£„Éâ„Ç¶„Éû„ÉÉ„Éó„ÅÆ„ÉÜ„ÇØ„Çπ„ÉÅ„É£„Çµ„Ç§„Ç∫„ÅÆÂÜ™Êï∞
+	int  exp    = 11;
+	UINT smSize = MathHelper::Pow(2, exp);
 
-	// ÉVÉÉÉhÉEÉ}ÉbÉvê∂ê¨
 	ShadowMap shadowMap;
 	if (!shadowMap.Create(smSize))
 		return false;
 
-	// ìäâeÉfÅ[É^ÇÃê›íË
 	FreeCamera camera;
 
-	// FPSêßå‰èÄîı
 	MySleep sleep;
 	sleep.QuerySet();
 
 	float angle	 = 0.0f;
 	float light  = 0.0f;
 
-	// ï`âÊÉpÉ^Å[Éì
+	// ÔøΩ`ÔøΩÔøΩpÔøΩ^ÔøΩ[ÔøΩÔøΩ
 	DRAW_PATTERN drawPattern = DRAW_PATTERN::Default;
 	DRAW_MODEL	 drawModel	 = DRAW_MODEL::Mirai_Akari;
 	bool		 debugDraw   = false;
@@ -251,12 +240,13 @@ bool GameBase::Run(HINSTANCE hIns)
 	float baseIntensity		= 1.0f;
 	float baseSaturation	= 1.0f;
 
-	// ÉNÉäÉAÉJÉâÅ[
+	// ËÉåÊôØ„Ç´„É©„Éº
 	static float color[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
-	// ÉVÉFÅ[É_Å[ê∂ê¨
-	Effect effectShadowMap(VERTEX_SHADER_ID::SHADOW_SHADER);
+	// ÔøΩVÔøΩFÔøΩ[ÔøΩ_ÔøΩ[ÔøΩÔøΩÔøΩÔøΩ
 	Effect effectMesh(VERTEX_SHADER_ID::MESH_SHADER, PIXEL_SHADER_ID::MESH_SHADER);
+	Effect effectSkinnedMesh(VERTEX_SHADER_ID::SKINNED_MESH_SHADER, PIXEL_SHADER_ID::MESH_SHADER);
+	Effect effectShadowMap(VERTEX_SHADER_ID::SHADOW_SHADER);
 	Effect effectShadow(VERTEX_SHADER_ID::SHADOW_MESH_SHADER, PIXEL_SHADER_ID::SHADOW_MESH_SHADER);
 	Effect effectGrayScale(VERTEX_SHADER_ID::TEXTURE_SHADER, PIXEL_SHADER_ID::GRAYSCALE_SHADER);
 	Effect effectBright(VERTEX_SHADER_ID::TEXTURE_SHADER, PIXEL_SHADER_ID::BRIGHTPASS_SHADER);
@@ -267,22 +257,30 @@ bool GameBase::Run(HINSTANCE hIns)
 
 	SphereModel sphere;
 
-	// ÉQÅ[ÉÄÉãÅ[Év
+	Animation anim;
+	//anim.Load("res/VMD/sweetmagic-left.vmd");
+	anim.Load("res/VMD/FUCM_04_0001_RHiKick.vmd");
+
+	float timer = 0.0f;
+	float animEndFrame = anim.EndFrame();
+
+	SkinnedMesh	skinnedMesh(soldier->mesh, soldier->skeleton, anim);
+	
+	// „É°„Ç§„É≥„É´„Éº„Éó
 	while (Window::GetInstance()->MessageHandling())
 	{
-		// ì¸óÕä÷åWçXêV
 		Keyboard::GetInstance()->Update();
 
-		// ã≠êßèIóπ
+		// Âº∑Âà∂ÁµÇ‰∫ÜÂá¶ÁêÜ
 		if (Keyboard::GetInstance()->IsKeyDown(KEY_CODE::KEY_ESC))
 			break;
 
-		/*** ÉQÅ[ÉÄÇÃèàóù ***/
-		DirectX11::GetInstance()->ClearRenderTarget(&renderTarget, color);
+		/*** ‰ª•‰∏ã„Ç≤„Éº„É†„É°„Ç§„É≥Âá¶ÁêÜ ***/
+		DirectX11::GetInstance()->ClearRenderTarget(&backBuffer, color);
 
-		/* ÉLÅ[É{Å[ÉhÇÃì¸óÕ */
+		/* ÂÖ•ÂäõÂá¶ÁêÜ */
 		{
-			// ï`âÊèÓïÒÇÃêÿÇËë÷Ç¶
+			// „É¢„Éá„É´Âàá„ÇäÊõø„Åà
 			if (Keyboard::GetInstance()->IsKeyDown(KEY_CODE::KEY_1))
 				drawPattern = DRAW_PATTERN::Default;
 			else if (Keyboard::GetInstance()->IsKeyDown(KEY_CODE::KEY_2))
@@ -292,81 +290,76 @@ bool GameBase::Run(HINSTANCE hIns)
 			else if (Keyboard::GetInstance()->IsKeyDown(KEY_CODE::KEY_4))
 				drawPattern = DRAW_PATTERN::Monochrome;
 
-			// ÉVÉÉÉhÉEÉ}ÉbÉvÇÃâëúìxÇÃïœçX
-			int prevIndex = index;
+			// ÂΩ±Ëß£ÂÉèÂ∫¶Âàá„ÇäÊõø„Åà
+			int prevIndex = exp;
 			if (Keyboard::GetInstance()->IsKeyDown(KEY_CODE::KEY_Q))
-				index--;
+				exp--;
 			else if (Keyboard::GetInstance()->IsKeyDown(KEY_CODE::KEY_E))
-				index++;
-			if (index != prevIndex)
+				exp++;
+			if (exp != prevIndex)
 			{
-				index = MathHelper::Clamp(index, 9, 12);
-				shadowMap.Create(MathHelper::Pow(2, index));
+				exp = MathHelper::Clamp(exp, 9, 12);
+				shadowMap.Create(MathHelper::Pow(2, exp));
 			}
 
-			// ï`âÊÉÇÉfÉãÇÃêÿÇËë÷Ç¶
+			// ÊèèÁîª„É¢„Éá„É´Âàá„ÇäÊõø„Åà
 			if (Keyboard::GetInstance()->IsKeyDown(KEY_CODE::KEY_C))
 			{
-				int current = static_cast<int>(drawModel);
-				current++;
-				current   = MathHelper::Mod(current, static_cast<int>(DRAW_MODEL::MAX));
-				drawModel = static_cast<DRAW_MODEL>(current);
+				int currentModelNum = static_cast<int>(drawModel);
+				currentModelNum = MathHelper::Mod(++currentModelNum, static_cast<int>(DRAW_MODEL::MAX));
+				drawModel = static_cast<DRAW_MODEL>(currentModelNum);
 			}
-			// ÉÇÉfÉãâÒì]
+
+			// „É¢„Éá„É´YËª∏ÂõûËª¢
 			if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_Z))
 				angle += 0.5f;
 			else if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_X))
 				angle -= 0.5f;
 
-			// ÉpÉâÉÅÅ[É^ï`âÊÇÇ∑ÇÈÇ©ÅH
+			// „Éá„Éê„ÉÉ„Ç∞Ë°®Ë®òÂàá„ÇäÊõø„Åà
 			if (Keyboard::GetInstance()->IsKeyDown(KEY_CODE::KEY_SPACE))
 				debugDraw = !debugDraw;
 
-			// åıåπÇÃà íuÇê›íË
+			// ÔøΩÔøΩÔøΩÔøΩÔøΩÃà íuÔøΩÔøΩ›íÔøΩ
 			//if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_A))
 			//	light += 0.01f;
 			//else if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_D))
 			//	light -= 0.01f;
 		}
 
-		/* É|ÉXÉgÉGÉtÉFÉNÉgÉpÉâÉÅÅ[É^ÇÃëÄçÏ */
+		/* „Éù„Çπ„Éà„Ç®„Éï„Çß„ÇØ„Éà„Éë„É©„É°„Éº„ÇøÂ§âÊõ¥ */
 		{
-			// ãPìxÇÃËáíl
 			if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_Y))
 				brightPassThreshold += 0.01f;
 			else if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_G))
 				brightPassThreshold -= 0.01f;
 			brightPassThreshold = MathHelper::Clamp(brightPassThreshold, 0.0f, 1.0f);
 
-			// å≥âÊëúÇÃÉeÉNÉXÉ`ÉÉÇÃç ìx
 			if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_U))
 				bloomIntensity += 0.01f;
 			else if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_H))
 				bloomIntensity -= 0.01f;
 			bloomIntensity = MathHelper::Clamp(bloomIntensity, 0.0f, 1.0f);
 
-			// å≥âÊëúÇÃÉeÉNÉXÉ`ÉÉÇÃãPìx
 			if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_I))
 				bloomSaturation += 0.01f;
 			else if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_J))
 				bloomSaturation -= 0.01f;
 			bloomSaturation = MathHelper::Clamp(bloomSaturation, 0.0f, 1.0f);
 
-			// ÉuÉãÅ[ÉÄÉeÉNÉXÉ`ÉÉÇÃç ìx
 			if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_O))
 				baseIntensity += 0.01f;
 			else if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_K))
 				baseIntensity -= 0.01f;
 			baseIntensity = MathHelper::Clamp(baseIntensity, 0.0f, 1.0f);
 
-			// ÉuÉãÅ[ÉÄÉeÉNÉXÉ`ÉÉÇÃãPìx
 			if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_P))
 				baseSaturation += 0.01f;
 			else if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_L))
 				baseSaturation -= 0.01f;
 			baseSaturation = MathHelper::Clamp(baseSaturation, 0.0f, 1.0f);
 
-			// É|ÉXÉgÉGÉtÉFÉNÉgÇÃÉpÉâÉÅÅ[É^Çèâä˙âª
+			// „Éù„Çπ„Éà„Ç®„Éï„Çß„ÇØ„Éà„Éë„É©„É°„Éº„Çø„É™„Çª„ÉÉ„Éà
 			if (Keyboard::GetInstance()->IsKeyDown(KEY_CODE::KEY_R))
 			{
 				brightPassThreshold = 0.7f;
@@ -379,7 +372,6 @@ bool GameBase::Run(HINSTANCE hIns)
 
 		//shadowMap.Update();
 
-		// ÉJÉÅÉâçXêV
 		camera.Update();
 
 		float deglight = MathHelper::ToDegrees(light);
@@ -390,63 +382,70 @@ bool GameBase::Run(HINSTANCE hIns)
 
 		ShadowMapShader shadowMapShader(effectShadowMap);
 
-		/* ï`âÊèàóù */
-		// ÉVÉÉÉhÉEÉ}ÉbÉvèàóù
+		/* ÂΩ±Áî®ÊèèÁîª */
 		shadowMap.Begin(effectShadowMap);
 
-		// ÉÇÉfÉãÇÃï`âÊ
-		stage->DrawForShadow(shadowMapShader, Matrix::Identity);
+		stage->Draw(shadowMapShader, Matrix::Identity);
 		switch (drawModel)
 		{
 		case DRAW_MODEL::Mirai_Akari: 
-			mirai_akari->DrawForShadow(shadowMapShader, worldMatrix); break;
-		case DRAW_MODEL::Siro:  	 
-			siro->DrawForShadow(shadowMapShader, worldMatrix);	break;
+			mirai_akari->Draw(shadowMapShader, worldMatrix); break;
+		case DRAW_MODEL::Siro:
+			siro->Draw(shadowMapShader, worldMatrix);	break;
 		case DRAW_MODEL::Kouhai_chan:
-			kouhai_chan->DrawForShadow(shadowMapShader, worldMatrix); break;
+			kouhai_chan->Draw(shadowMapShader, worldMatrix); break;
 		case DRAW_MODEL::Ichigo:
-			ichigo->DrawForShadow(shadowMapShader, worldMatrix); break;
+			ichigo->Draw(shadowMapShader, worldMatrix); break;
+		case DRAW_MODEL::Soldier:
+			soldier->Draw(shadowMapShader, worldMatrix); break;
 		default: break;
 		}
 
 		shadowMap.End(effectShadowMap);
 		
-		// í èÌï`âÊ
+		/* ÈÄöÂ∏∏ÊèèÁîª */
 		rTexDefault.Begin();
 		rTexDefault.Clear();
 
-		// åıåπèÓïÒîΩâf
 		Light::GetInstance()->Draw();
-		// ÉJÉÅÉâèÓïÒîΩâf
+
 		//Camera::GetInstance()->SetShader();
 		//camera.Draw();
 
-		/* ÉÇÉfÉãÇÃï`âÊ */
-		// âeÉfÅ[É^ÉZÉbÉg
+		// ÂΩ±„Éá„Éº„ÇøÂèçÊò†ÊèèÁîª
 		shadowMap.Set();
 		MeshShader shadowShader(effectShadow);
 		camera.Draw();
 		stage->Draw(shadowShader, Matrix::Identity);
 		shadowMap.Clear();
 
-		MeshShader meshShader(effectMesh);
 
-		// ÉLÉÉÉâÉNÉ^Å[ÉÇÉfÉã
+		// ÔøΩLÔøΩÔøΩÔøΩÔøΩÔøΩNÔøΩ^ÔøΩ[ÔøΩÔøΩÔøΩfÔøΩÔøΩ
+		MeshShader meshShader(effectMesh);
+		SkinnedMeshShader skinnedMeshShader(effectSkinnedMesh);
+
+		skinnedMesh.Calculate(worldMatrix, timer);
+		if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_9))
+			timer += 0.1;
+		if (Keyboard::GetInstance()->IsKey(KEY_CODE::KEY_0))
+			timer -= 0.1;
+		//timer = MathHelper::Clamp(timer, 0.0f, anim.EndFrame());
+		timer = MathHelper::Mod(timer + 1, anim.EndFrame());
+
+		camera.Draw();
 		switch (drawModel)
 		{
 		case DRAW_MODEL::Mirai_Akari:
-			camera.Draw();
 			mirai_akari->Draw(meshShader, worldMatrix); break;
 		case DRAW_MODEL::Siro:
-			camera.Draw();
 			siro->Draw(meshShader, worldMatrix); break;
 		case DRAW_MODEL::Kouhai_chan:
-			camera.Draw();
 			kouhai_chan->Draw(meshShader, worldMatrix); break;
-		case DRAW_MODEL::Ichigo:	
-			camera.Draw();
+		case DRAW_MODEL::Ichigo:
 			ichigo->Draw(meshShader, worldMatrix);	break;
-		default: 
+		case DRAW_MODEL::Soldier:
+			skinnedMesh.Draw(skinnedMeshShader); break;
+		default:
 			break;
 		}
 
@@ -460,8 +459,8 @@ bool GameBase::Run(HINSTANCE hIns)
 		shadowMap.Clear();
 		rTexDefault.End();
 
-		/* É|ÉXÉgÉGÉtÉFÉNÉgäJén */
-		// ÉOÉåÉCÉXÉPÅ[ÉãÇ≈ï`âÊ
+		/* „Éù„Çπ„Éà„Ç®„Éï„Çß„ÇØ„Éà */
+		// „Ç∞„É¨„Ç§„Çπ„Ç±„Éº„É´
 		if (drawPattern == DRAW_PATTERN::Monochrome)
 		{
 			rTexGrayScale.Begin();
@@ -476,7 +475,7 @@ bool GameBase::Run(HINSTANCE hIns)
 		{
 			if (drawPattern != DRAW_PATTERN::Default)
 			{
-				// ÉsÉNÉZÉãÉVÉFÅ[É_Ç…ÉpÉâÉÅÅ[É^ÇÃÉZÉbÉg
+				// „Ç∑„Çß„Éº„ÉÄ„ÉºÁî®„Éë„É©„É°„Éº„Çø
 				{
 					BloomCB bloomCB;
 					bloomCB.g_BrightPassThreshold = brightPassThreshold;
@@ -489,7 +488,7 @@ bool GameBase::Run(HINSTANCE hIns)
 					DirectX11::GetInstance()->GetContext()->PSSetConstantBuffers(0, 1, &pBloomBuffer.p);
 				}
 
-				// çÇãPìxíäèo
+				// „Éñ„É©„Ç§„Éà„Ç®„Éï„Çß„ÇØ„Éà
 				rTexBright.Begin();
 				rTexBright.Clear();
 				effectBright.Begin();
@@ -498,7 +497,7 @@ bool GameBase::Run(HINSTANCE hIns)
 				effectBright.End();
 				rTexBright.End();
 
-				// êÖïΩï˚å¸ÉuÉâÅ[
+				// H„Éñ„É©„Éº„Ç®„Éï„Çß„ÇØ„Éà
 				rTexBlurH.Begin();
 				rTexBlurH.Clear();
 				effectBlurH.Begin();
@@ -507,7 +506,7 @@ bool GameBase::Run(HINSTANCE hIns)
 				effectBlurH.End();
 				rTexBlurH.End();
 
-				// êÇíºï˚å¸ÉuÉâÅ[
+				// V„Éñ„É©„Éº„Ç®„Éï„Çß„ÇØ„Éà
 				rTexBlurVRT.Begin();
 				rTexBlurVRT.Clear();
 				effectBlurV.Begin();
@@ -516,7 +515,7 @@ bool GameBase::Run(HINSTANCE hIns)
 				effectBlurV.End();
 				rTexBlurVRT.End();
 
-				// å≥âÊëúÇ∆ÉuÉâÅ[âÊëúÇçáê¨
+				// „Éñ„É´„Éº„É†„Ç®„Éï„Çß„ÇØ„Éà
 				rTexBloomCombine.Begin();
 				rTexBloomCombine.Clear();
 				effectBloomCombine.Begin();
@@ -529,7 +528,7 @@ bool GameBase::Run(HINSTANCE hIns)
 
 				if (drawPattern == DRAW_PATTERN::Uncharted2)
 				{
-					// ÉAÉìÉ`ÉÉÅ[ÉeÉbÉhÇQÉgÉDÅ[ÉìÉ}ÉbÉv
+					// „Ç¢„É≥„ÉÅ„É£„Éº„ÉÜ„ÉÉ„Éâ„Ç®„Éï„Çß„ÇØ„Éà
 					rTexUncharted2ToneMap.Begin();
 					rTexUncharted2ToneMap.Clear();
 					effectUncharted2ToneMap.Begin();
@@ -541,8 +540,7 @@ bool GameBase::Run(HINSTANCE hIns)
 			}
 		}
 
-		/* ç≈èIï`âÊ */
-		// ï`âÊèÓïÒÉZÉbÉg
+		// ÊúÄÁµÇÊèèÁîª„Éë„Çø„Éº„É≥ÂàÜÂ≤ê
 		switch (drawPattern)
 		{
 		case DRAW_PATTERN::Default:	   SpriteManager::GetInstance()->DrawGraph(Vector2::Zero, rTexDefault); break;
@@ -560,28 +558,28 @@ bool GameBase::Run(HINSTANCE hIns)
 		default: break;
 		}
 
-		// FPSï`âÊ
-		//FontManager::GetInstance()->Draw(Vector2(10.0f, 10.0f), MyUtil::toString("FPS : %.1f", sleep.fps));
+		// FPSÊèèÁîª
+		//FontManager::GetInstance()->DebugDraw(Vector2(10.0f, 10.0f), MyUtil::toString("FPS : %.1f", sleep.fps));
 
-		// ÉpÉâÉÅÅ[É^ï`âÊ
+		// „Éá„Éê„ÉÉ„Ç∞Ë°®Á§∫
 		if (debugDraw)
 		{
-			FontManager::GetInstance()->Draw(Vector2(10.0f,  30.0f), MyUtil::toString("ÉâÉCÉgâÒì]     : A/D"));
-			FontManager::GetInstance()->Draw(Vector2(10.0f,  50.0f), MyUtil::toString("ÉÇÉfÉãâÒì]     : Z/X"));
-			FontManager::GetInstance()->Draw(Vector2(10.0f,  70.0f), MyUtil::toString("ÉÇÉfÉãêÿÇËë÷Ç¶   : C"));
-			FontManager::GetInstance()->Draw(Vector2(10.0f,  90.0f), MyUtil::toString("ÉJÉÅÉâà⁄ìÆ     : è\éöÉLÅ["));
-			FontManager::GetInstance()->Draw(Vector2(10.0f, 110.0f), MyUtil::toString("ÉVÉFÅ[É_Å[êÿÇËë÷Ç¶ : 1/2/3/4"));
-			FontManager::GetInstance()->Draw(Vector2(10.0f, 130.0f), MyUtil::toString("âeâëúìxêÿÇËë÷Ç¶ Å@: Q/E"));
-			FontManager::GetInstance()->Draw(Vector2(10.0f, 200.0f), MyUtil::toString("ãPìxÇÃËáíl   : Y/G : %.2f", brightPassThreshold));
-			FontManager::GetInstance()->Draw(Vector2(10.0f, 220.0f), MyUtil::toString("å≥âÊëúÇÃç ìx  : P/L : %.2f", baseSaturation));
-			FontManager::GetInstance()->Draw(Vector2(10.0f, 240.0f), MyUtil::toString("å≥âÊëúÇÃãPìx  : O/K : %.2f", baseIntensity));
-			FontManager::GetInstance()->Draw(Vector2(10.0f, 260.0f), MyUtil::toString("ÉuÉãÅ[ÉÄÇÃç ìx : I/J : %.2f", bloomSaturation));
-			FontManager::GetInstance()->Draw(Vector2(10.0f, 280.0f), MyUtil::toString("ÉuÉãÅ[ÉÄÇÃãPìx : U/H : %.2f", bloomIntensity));
-			FontManager::GetInstance()->Draw(Vector2(10.0f, 300.0f), MyUtil::toString("ÉpÉâÉÅÅ[É^ÇÃèâä˙âª : R"));
+			FontManager::GetInstance()->DebugDraw(Vector2(10.0f,  30.0f), MyUtil::toString("ÔøΩÔøΩÔøΩCÔøΩgÔøΩÔøΩ]     : A/D"));
+			FontManager::GetInstance()->DebugDraw(Vector2(10.0f,  50.0f), MyUtil::toString("ÔøΩÔøΩÔøΩfÔøΩÔøΩÔøΩÔøΩ]     : Z/X"));
+			FontManager::GetInstance()->DebugDraw(Vector2(10.0f,  70.0f), MyUtil::toString("ÔøΩÔøΩÔøΩfÔøΩÔøΩÔøΩÿÇÔøΩ÷ÇÔøΩ   : C"));
+			FontManager::GetInstance()->DebugDraw(Vector2(10.0f,  90.0f), MyUtil::toString("ÔøΩJÔøΩÔøΩÔøΩÔøΩÔøΩ⁄ìÔøΩ     : "));
+			FontManager::GetInstance()->DebugDraw(Vector2(10.0f, 110.0f), MyUtil::toString("ÔøΩVÔøΩFÔøΩ[ÔøΩ_ÔøΩ[ÔøΩÿÇÔøΩ÷ÇÔøΩ : 1/2/3/4"));
+			FontManager::GetInstance()->DebugDraw(Vector2(10.0f, 130.0f), MyUtil::toString("ÔøΩeÔøΩëúìxÔøΩÿÇÔøΩ÷ÇÔøΩ ÔøΩ@: Q/E"));
+			FontManager::GetInstance()->DebugDraw(Vector2(10.0f, 200.0f), MyUtil::toString("ÔøΩPÔøΩxÔøΩÔøΩËáíl   : Y/G : %.2f", brightPassThreshold));
+			FontManager::GetInstance()->DebugDraw(Vector2(10.0f, 220.0f), MyUtil::toString("ÔøΩÔøΩÔøΩÊëúÔøΩÃç ìx  : P/L : %.2f", baseSaturation));
+			FontManager::GetInstance()->DebugDraw(Vector2(10.0f, 240.0f), MyUtil::toString("ÔøΩÔøΩÔøΩÊëúÔøΩÃãPÔøΩx  : O/K : %.2f", baseIntensity));
+			FontManager::GetInstance()->DebugDraw(Vector2(10.0f, 260.0f), MyUtil::toString("ÔøΩuÔøΩÔøΩÔøΩ[ÔøΩÔøΩÔøΩÃç ìx : I/J : %.2f", bloomSaturation));
+			FontManager::GetInstance()->DebugDraw(Vector2(10.0f, 280.0f), MyUtil::toString("ÔøΩuÔøΩÔøΩÔøΩ[ÔøΩÔøΩÔøΩÃãPÔøΩx : U/H : %.2f", bloomIntensity));
+			FontManager::GetInstance()->DebugDraw(Vector2(10.0f, 300.0f), MyUtil::toString("ÔøΩpÔøΩÔøΩÔøΩÔøΩÔøΩ[ÔøΩ^ÔøΩÃèÔøΩÔøΩÔøΩÔøΩÔøΩ : R"));
 		}
 		else
 		{
-			//FontManager::GetInstance()->Draw(Vector2(10.0f, 30.0f), MyUtil::toString("DebugText : SPACE"));
+			//FontManager::GetInstance()->DebugDraw(Vector2(10.0f, 30.0f), MyUtil::toString("DebugText : SPACE"));
 		}
 		
 		//SpriteManager::GetInstance()->DrawGraph(Vector2(100, 100), FontManager::GetInstance()->GetDebugFont().GetRenderTexture());
@@ -589,11 +587,11 @@ bool GameBase::Run(HINSTANCE hIns)
 		//shadowMap.DebugDraw();
 		//SpriteManager::GetInstance()->Draw(SPRITE_ID::TEST_SPRITE, Vector2(100, 100));
 
-		// âÊñ ÇÃçXêV
-		DirectX11::GetInstance()->GetSwapChain()->Present(0, 0);
+		// ÊèèÁîª
+		DirectX11::GetInstance()->GetSwapChain()->Present(1, 0);
 
-		// FPSêßå‰
-		sleep.Wait();
+		// FPSÂæÖÊ©ü
+		//sleep.Wait();
 	}
 
 	ModelManager::GetInstance()->Clear();
@@ -604,15 +602,15 @@ bool GameBase::Run(HINSTANCE hIns)
 
 void GameBase::LoadResources()
 {
-	/* ÉVÉFÅ[É_Å[ÇÃì«Ç›çûÇ› */
-	// í∏ì_ÉVÉFÅ[É_ÇÃì«Ç›çûÇ›
+	// È†ÇÁÇπ„Ç∑„Çß„Éº„ÉÄ„ÉºË™≠„ÅøËæº„Åø
 	ShaderManager::GetInstance()->Add(VERTEX_SHADER_ID::MESH_SHADER, std::make_shared<MeshVertexShader>());
 	ShaderManager::GetInstance()->Add(VERTEX_SHADER_ID::SHADOW_MESH_SHADER, std::make_shared<ShadowMeshVertexShader>());
+	ShaderManager::GetInstance()->Add(VERTEX_SHADER_ID::SKINNED_MESH_SHADER, std::make_shared<SkinnedMeshVertexShader>());
 	ShaderManager::GetInstance()->Add(VERTEX_SHADER_ID::SHADOW_SHADER, std::make_shared<ShadowMapVertexShader>());
 	ShaderManager::GetInstance()->Add(VERTEX_SHADER_ID::TEXTURE_SHADER, std::make_shared<TextureVertexShader>());
 	ShaderManager::GetInstance()->Add(VERTEX_SHADER_ID::FONT_SHADER, std::make_shared<FontVertexShader>());
 
-	// ÉsÉNÉZÉãÉVÉFÅ[É_ÇÃì«Ç›çûÇ›
+	// „Éî„ÇØ„Çª„É´„Ç∑„Çß„Éº„ÉÄ„ÉºË™≠„ÅøËæº„Åø
 	ShaderManager::GetInstance()->Add(PIXEL_SHADER_ID::MESH_SHADER, std::make_shared<MeshPixelShader>());
 	ShaderManager::GetInstance()->Add(PIXEL_SHADER_ID::SHADOW_MESH_SHADER, std::make_shared<ShadowMeshPixelShader>());
 	ShaderManager::GetInstance()->Add(PIXEL_SHADER_ID::TEXTURE_SHADER, std::make_shared<TexturePixelShader>());
@@ -623,14 +621,16 @@ void GameBase::LoadResources()
 	ShaderManager::GetInstance()->Add(PIXEL_SHADER_ID::BLOOM_SHADER, std::make_shared<PostEffectPixelShader>("BloomCombine.hlsl"));
 	ShaderManager::GetInstance()->Add(PIXEL_SHADER_ID::UNCHARTED2_TOONMAP_SHADER, std::make_shared<PostEffectPixelShader>("Uncharted2Tonemap.hlsl"));
 
-	// ÉÇÉfÉãÇÃì«Ç›çûÇ›
+	// „É¢„Éá„É´Ë™≠„ÅøËæº„Åø
 	ModelManager::GetInstance()->Load("MiraiAkari/MiraiAkari_v1.0.pmx", MODEL_ID::MIRAI_AKARI_MODEL);
 	ModelManager::GetInstance()->Load("Siro/siro_dance_costume_v1.0.pmx", MODEL_ID::SIRO_MODEL);
 	ModelManager::GetInstance()->Load("Kouhai_chan/Kouhai_chan.pmd", MODEL_ID::KOUHAI_CHAN_MODEL);
 	ModelManager::GetInstance()->Load("Ichigo/Ichigo.pmx", MODEL_ID::ICHIGO_MODEL);
+	//ModelManager::GetInstance()->Load("Alice/alice.pmd", MODEL_ID::ALICE_MODEL);
+	ModelManager::GetInstance()->Load("Soldier/Soldier.pmx", MODEL_ID::SOLDIER_MODEL);
 	ModelManager::GetInstance()->Load("Stage/Stage.pmx", MODEL_ID::STAGE_MODEL);
 
-	// ÉXÉvÉâÉCÉgÇÃì«Ç›çûÇ›
+	// „ÉÜ„ÇØ„Çπ„ÉÅ„É£„ÉºË™≠„ÅøËæº„Åø
 	SpriteManager::GetInstance()->Initialize(m_Width, m_Height);
 	SpriteManager::GetInstance()->Load("numakuro.png", SPRITE_ID::TEST_SPRITE);
 	SpriteManager::GetInstance()->Load("yuingo.jpg", SPRITE_ID::TEST_SPRITE);

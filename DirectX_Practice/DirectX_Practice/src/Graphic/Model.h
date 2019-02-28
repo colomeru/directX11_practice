@@ -8,13 +8,13 @@ class Model
 {
 public:
 	// コンストラクタ
-	Model();
+	Model(const mmd::pmx::PMXFile& pmx, const std::string& path);
+	// コンストラクタ
+	Model(const mmd::PMD::PMDFile& pmd, const std::string& path);
 	// デストラクタ
 	~Model();
 	// 描画
 	void Draw(Mesh::Shader& shader, const Matrix& world);
-	// 影用描画
-	void DrawForShadow(Mesh::Shader& shader, const Matrix& world);
 
 	// アルファブレンドの設定
 	void SetAlphaBlend(bool alphaEnable, bool alphaToCoverageEnable);
@@ -22,6 +22,8 @@ public:
 	// コピー禁止
 	Model(const Model&) = delete;
 	Model& operator = (const Model&) = delete;
+
+	Mesh GetMesh() const;
 
 public:
 	Mesh		mesh;		// メッシュ

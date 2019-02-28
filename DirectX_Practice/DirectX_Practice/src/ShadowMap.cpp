@@ -202,7 +202,7 @@ void ShadowMap::Update()
 
 void ShadowMap::DebugDraw()
 {
-	FontManager::GetInstance()->Draw(Vector2(10.0f, 320.0f), MyUtil::toString("m_Bias : K/M : %.7f", m_Bias));
-	FontManager::GetInstance()->Draw(Vector2(10.0f, 340.0f), MyUtil::toString("m_SlopeScaledBias : J/N : %.2f", m_SlopeScaledBias));
-	FontManager::GetInstance()->Draw(Vector2(10.0f, 360.0f), MyUtil::toString("m_DepthBiasClamp : H/B : %.2f", m_DepthBiasClamp));
+	FontManager::GetInstance()->DebugDraw(Vector2(10.0f, 320.0f), MyUtil::toString("m_Bias : K/M : %.7f", m_Bias));
+	FontManager::GetInstance()->DebugDraw(Vector2(10.0f, 340.0f), MyUtil::toString("m_SlopeScaledBias : J/N : %.2f", m_SlopeScaledBias));
+	FontManager::GetInstance()->DebugDraw(Vector2(10.0f, 360.0f), MyUtil::toString("m_DepthBiasClamp : H/B : %.2f", m_DepthBiasClamp));
 }

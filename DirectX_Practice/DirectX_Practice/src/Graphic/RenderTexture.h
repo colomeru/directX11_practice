@@ -8,7 +8,7 @@ class RenderTexture
 {
 public:
 	// コンストラクタ
-	RenderTexture(DepthStencil* pDS);
+	explicit RenderTexture(DepthStencil* pDS);
 	// デストラクタ
 	~RenderTexture();
 	// 生成

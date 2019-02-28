@@ -33,7 +33,7 @@ public:
 					std::stringstream ss;
 					ss << std::fixed << std::setprecision(precision - '0') << value;	//
 					ret += ss.str();
-					*s++;
+					*(++s);
 					std::string str = toString(*s ? ++s : s, args...); // ‚³‚ç‚È‚éˆø”‚ğŒ©‚Â‚¯‚é‚½‚ßA*s == '\0' ‚Å‚àŒÄ‚Ño‚·
 					ret += str;
 					return ret;
@@ -45,7 +45,8 @@ public:
 					return ret;
 				}
 			}
-			ret += *s++;
+			ret += *s;
+			*(++s);
 		}
 		throw std::runtime_error("extra arguments provided to printf");
 		return ret;

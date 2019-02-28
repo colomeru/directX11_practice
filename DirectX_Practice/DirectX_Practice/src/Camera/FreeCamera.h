@@ -1,4 +1,6 @@
 #pragma once
+#include <d3d11.h>
+#include <atlbase.h>
 #include "../util/math/Matrix.h"
 
 struct Vector3;
@@ -19,5 +21,6 @@ public:
 	void Translation(const Vector3& v);
 
 private:
-	Matrix		m_posture;	// 姿勢
+	CComPtr<ID3D11Buffer>	m_pConstantBuffer;	// コンスタントバッファ
+	Matrix					m_pose;				// 姿勢
 };

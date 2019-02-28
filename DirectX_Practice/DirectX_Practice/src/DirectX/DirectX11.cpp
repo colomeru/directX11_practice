@@ -28,6 +28,9 @@ bool DirectX11::Initialize()
 		return false;
 
 	// ウィンドウの自動切り替えを無効化
+	//if (!SetWindowAssociation())
+	//	return false;
+
 	CreateViewPort();
 
 	return true;

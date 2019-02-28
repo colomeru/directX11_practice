@@ -20,11 +20,13 @@ void FontManager::Load(const std::string & fileName, int fontSize)
 {
 }
 
-void FontManager::Draw(Vector2 position, const std::string& text)
+void FontManager::DebugDraw(Vector2 position, const std::string& text)
 {
+#ifdef DEBUG
 	DirectX11::GetInstance()->SetAlphaBlend(true, false);
 	m_DebugFontManager.Draw(position, text, m_Effect);
 	DirectX11::GetInstance()->SetAlphaBlend(false, false);
+#endif // DEBUG
 }
 
 CharacterManager FontManager::GetDebugFont() const

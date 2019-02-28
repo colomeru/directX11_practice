@@ -12,7 +12,7 @@ class ShadowMapMesh : public Mesh
 
 public:
 	// コンストラクタ
-	ShadowMapMesh(Mesh& mesh);
+	explicit ShadowMapMesh(Mesh& mesh);
 	// 描画
 	void Draw(ShadowMapMesh::Shader& shader) const;
 

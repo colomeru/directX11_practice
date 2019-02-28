@@ -102,16 +102,16 @@ void RenderTexture::Set(const RenderTexture & pTexture, UINT slot)
 
 void RenderTexture::Clear()
 {
+	static float clearColor[] = { 0.8f, 1.0f, 1.0f, 1.0f };
+
 	// レンダーターゲットビューの切り替え
-	if (m_pDS != nullptr)
+	if (m_pDS)
 	{
-		static float clearColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 		DirectX11::GetInstance()->ClearRenderTarget(&m_RT, clearColor);
 		DirectX11::GetInstance()->ClearDepthStencil(m_pDS, 1.0f, 0);
 	}
 	else
 	{
-		static float clearColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		DirectX11::GetInstance()->ClearRenderTarget(&m_RT, clearColor);
 	}
 }

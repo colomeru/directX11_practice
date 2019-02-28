@@ -5,6 +5,7 @@
 
 MeshShader::MeshShader(Effect & effect) :
 	m_Effect(effect),
+	m_Material(),
 	m_pConstantBuffer(nullptr),
 	m_pSampler(nullptr)
 {

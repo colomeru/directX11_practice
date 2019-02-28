@@ -28,7 +28,7 @@ public:
 	ShaderResource GetShaderResource() const;
 
 private:
-	unsigned int						m_Width;
-	unsigned int						m_Height;
-	ShaderResource						m_Res;
+	unsigned int						m_Width;	// ‰¡•
+	unsigned int						m_Height;	// c•
+	ShaderResource						m_Res;		// ƒŠƒ\[ƒX
 };

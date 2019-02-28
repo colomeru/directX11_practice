@@ -23,6 +23,11 @@ struct WorldProjCB
 	Matrix	projection;
 };
 
+struct BonesCB
+{
+	Matrix bones[256];
+};
+
 struct UV_CB
 {
 	Vector2	uv_start;

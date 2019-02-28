@@ -1,7 +1,9 @@
 #include "Keyboard.h"
 #include "../DirectX/DirectX11.h"
 
-Keyboard::Keyboard()
+Keyboard::Keyboard() :
+	m_KeyBoardNowBuf(),
+	m_KeyBoardOldBuf()
 {
 
 }
